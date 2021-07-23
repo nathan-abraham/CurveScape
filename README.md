@@ -1,0 +1,3 @@
+# CurveScape
+
+A graphing application.
