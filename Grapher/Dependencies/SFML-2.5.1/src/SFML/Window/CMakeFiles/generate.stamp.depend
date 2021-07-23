@@ -1,0 +1,5 @@
+# CMake generation dependency list for this directory.
+C:/CPP_libs/SFML_source/SFML-2.5.1/src/SFML/Window/CMakeLists.txt
+C:/cmake-3.20.0-windows-x86_64/share/cmake-3.20/Modules/FindOpenGL.cmake
+C:/cmake-3.20.0-windows-x86_64/share/cmake-3.20/Modules/FindPackageHandleStandardArgs.cmake
+C:/cmake-3.20.0-windows-x86_64/share/cmake-3.20/Modules/FindPackageMessage.cmake

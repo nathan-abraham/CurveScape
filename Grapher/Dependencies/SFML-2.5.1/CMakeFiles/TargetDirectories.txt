@@ -1,0 +1,16 @@
+C:/CPP_libs/SFML_source/SFML-build/CMakeFiles/INSTALL.dir
+C:/CPP_libs/SFML_source/SFML-build/CMakeFiles/ALL_BUILD.dir
+C:/CPP_libs/SFML_source/SFML-build/CMakeFiles/ZERO_CHECK.dir
+C:/CPP_libs/SFML_source/SFML-build/src/SFML/CMakeFiles/INSTALL.dir
+C:/CPP_libs/SFML_source/SFML-build/src/SFML/System/CMakeFiles/sfml-system.dir
+C:/CPP_libs/SFML_source/SFML-build/src/SFML/System/CMakeFiles/INSTALL.dir
+C:/CPP_libs/SFML_source/SFML-build/src/SFML/Main/CMakeFiles/sfml-main.dir
+C:/CPP_libs/SFML_source/SFML-build/src/SFML/Main/CMakeFiles/INSTALL.dir
+C:/CPP_libs/SFML_source/SFML-build/src/SFML/Window/CMakeFiles/sfml-window.dir
+C:/CPP_libs/SFML_source/SFML-build/src/SFML/Window/CMakeFiles/INSTALL.dir
+C:/CPP_libs/SFML_source/SFML-build/src/SFML/Network/CMakeFiles/sfml-network.dir
+C:/CPP_libs/SFML_source/SFML-build/src/SFML/Network/CMakeFiles/INSTALL.dir
+C:/CPP_libs/SFML_source/SFML-build/src/SFML/Graphics/CMakeFiles/sfml-graphics.dir
+C:/CPP_libs/SFML_source/SFML-build/src/SFML/Graphics/CMakeFiles/INSTALL.dir
+C:/CPP_libs/SFML_source/SFML-build/src/SFML/Audio/CMakeFiles/sfml-audio.dir
+C:/CPP_libs/SFML_source/SFML-build/src/SFML/Audio/CMakeFiles/INSTALL.dir
