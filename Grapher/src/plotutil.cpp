@@ -373,7 +373,8 @@ void menuFile(EventManager& em, std::vector<Graph*>& graphs, std::string& curren
         ImGui::EndMenu();
     }
     if (ImGui::MenuItem("Save", "Ctrl+S")) {
-        if (current == "") {
+        if (current == "" || current.find(".png") != std::string::npos
+                || current.find(".jpg") != std::string::npos) {
             saveAsFlag = true;
         }
         else {
@@ -381,7 +382,7 @@ void menuFile(EventManager& em, std::vector<Graph*>& graphs, std::string& curren
             saveGraphs(graphs, current.c_str());
         }
     }
-    if (ImGui::MenuItem("Save As..") || saveAsFlag) {
+    if (ImGui::MenuItem("Save As...") || saveAsFlag) {
 		nfdchar_t* rawFilename;
 		nfdresult_t result = NFD_SaveDialog("png;jpg;graph", NULL, &rawFilename);
 
@@ -403,9 +404,10 @@ void menuFile(EventManager& em, std::vector<Graph*>& graphs, std::string& curren
 				screen = true;
 				frame = 0;
 			}
-
+            saveAsFlag = false;
 		}
 		else if (result == NFD_CANCEL) {
+            saveAsFlag = false;
 			LOG("canceled saving")
 		}
 		else {

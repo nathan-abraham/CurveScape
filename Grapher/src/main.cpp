@@ -2,8 +2,13 @@
 #include <fstream>
 #include <limits>
 #include <thread>
+#include <chrono>
 #include <array>
+#include <filesystem>
 #include <math.h>
+
+#ifdef _WIN32
+#endif
 
 #include <SFML/Graphics.hpp>
 #include <imgui.h>
@@ -26,9 +31,15 @@
 #define LOG(x) std::cout << (x) << std::endl;
 #define GET_VAR_NAME(var) (#var)
 
-int main()
+int main(int argc, char* argv[])
 {
     //std::cout << sf::VideoMode::getDesktopMode().width << ", " << sf::VideoMode::getDesktopMode().height << std::endl;
+    std::cout << argc << " arguments" << std::endl;
+    for (int i = 0; i < argc; ++i)
+    {
+        std::cout << "[" << argv[i] << "]" << std::endl;
+    }
+
     Graph::pointIncr = 1;
     Graph::numPoints = winWidth / Graph::pointIncr;
 
@@ -47,19 +58,35 @@ int main()
     Graph::window = &window;
 
     sf::Font font;
-    if (!font.loadFromFile("assets/OpenSans-Regular.ttf")) {
+    //if (!font.loadFromFile("assets/OpenSans-Regular.ttf")) {
+    //    LOG("Could not load font")
+    //    return 2;
+    //}
+
+    std::string currentPath = argv[0];
+    currentPath = currentPath.substr(0, currentPath.size() - std::string("CurveScape.exe").size());
+    if (!font.loadFromFile(currentPath + std::string("assets\\OpenSans-Regular.ttf"))) {
         LOG("Could not load font")
         return 2;
     }
 
     ImGuiIO& IO = ImGui::GetIO();
 
-    if (exists("assets/OpenSans-Bold.ttf")) {
-        IO.Fonts->AddFontFromFileTTF("assets/OpenSans-Bold.ttf", 18);
+    //if (exists("assets/OpenSans-Bold.ttf")) {
+    //    IO.Fonts->AddFontFromFileTTF("assets/OpenSans-Bold.ttf", 18);
+    //}
+    if (exists(currentPath + std::string("assets\\OpenSans-Bold.ttf"))) {
+        IO.Fonts->AddFontFromFileTTF(std::string(currentPath + std::string("assets\\OpenSans-Bold.ttf")).c_str(), 18);
     }
 
     IO.Fonts->AddFontDefault();
     ImGui::SFML::UpdateFontTexture();
+
+    //const char* iniFilename = std::string(currentPath + std::string("imgui.ini")).c_str();
+    char iniFilename[150];
+    strcpy_s(iniFilename, 149, std::string(currentPath + std::string("imgui.ini")).c_str());
+
+    IO.IniFilename = iniFilename;
 
     ImGui::GetStyle().FrameRounding = 4.0f;
     ImGui::GetStyle().GrabRounding = 4.0f;
@@ -169,6 +196,10 @@ int main()
     };
     static const int numOptions = 2;
 
+    if (argc > 1) {
+        loadGraphs(graphs, argv[1]);
+    }
+
     while (window.isOpen())
     {
         sf::Event event;
@@ -262,7 +293,7 @@ int main()
 
         // Debug
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-            std::cout << "Left mouse button pressed" << std::endl;
+            //std::cout << "Left mouse button pressed" << std::endl;
         }
 
 
@@ -406,6 +437,7 @@ int main()
         }
 
         if (saveAsFlag) {
+            LOG("main loop save as")
 			nfdchar_t* rawFilename;
 			nfdresult_t result = NFD_SaveDialog("png;jpg;graph", NULL, &rawFilename);
 

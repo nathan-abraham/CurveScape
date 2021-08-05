@@ -21,5 +21,6 @@ double fnInt(const char* expression, float a, float b, float n) {
     }
 
     ImGui::Text(std::to_string(area).c_str());
+    //std::cout << "calculated integral" << std::endl;
     return area;
 }
