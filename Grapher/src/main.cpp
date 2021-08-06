@@ -88,6 +88,10 @@ int main(int argc, char* argv[])
 
     IO.IniFilename = iniFilename;
 
+    sf::Image icon;
+    icon.loadFromFile(currentPath + std::string("assets\\icon_transparent.png"));
+    window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
+
     ImGui::GetStyle().FrameRounding = 4.0f;
     ImGui::GetStyle().GrabRounding = 4.0f;
 
@@ -168,13 +172,17 @@ int main(int argc, char* argv[])
     static std::string currentFileOpen = "";
 
     static float x_coor = 0;
-    static float lower_bound = 0;
-    static float upper_bound = 0;
+    static float intLowerBound = 0;
+    static float intUpperBound = 0;
+    static float maxLowerBound = 0;
+    static float maxUpperBound = 0;
 
     static double integralResult = 0;
     static double derivativeResult = 0;
+    static double maxResult = 0;
     static bool integralCalculated = false;
     static bool derivativeCalculated = false;
+    static bool maxCalculated = false;
 
     Graph y1("", "y1", true, graphColors[0]);
     Graph y2("", "y2", true, graphColors[1]);
@@ -192,9 +200,10 @@ int main(int argc, char* argv[])
 
     static const char* options[] = {
         "nDeriv",
-        "fnInt"
+        "fnInt",
+        "max",
     };
-    static const int numOptions = 2;
+    static const int numOptions = 3;
 
     if (argc > 1) {
         loadGraphs(graphs, argv[1]);
@@ -298,7 +307,10 @@ int main(int argc, char* argv[])
 
 
         ImGui::SFML::Update(window, deltaClock.restart());
+
+#ifdef _DEBUG
         ImGui::ShowDemoWindow();
+#endif
 
         if (mainActive) {
             mainMenuBar(eventManager, graphs, currentFileOpen, imageFilename, mainActive, panelActive, 
@@ -392,16 +404,28 @@ int main(int argc, char* argv[])
                     }
                 }
                 else if (strcmp(calcPreview, "fnInt") == 0) {
-                    ImGui::InputFloat("Lower Bound", &lower_bound);
-                    ImGui::InputFloat("Upper Bound", &upper_bound);
+                    ImGui::InputFloat("Lower Bound", &intLowerBound);
+                    ImGui::InputFloat("Upper Bound", &intUpperBound);
                     if (ImGui::Button("Submit##intSumbit")) {
                         //std::thread integral(fnInt, graphs[currentFuncIndex]->expression, lower_bound, upper_bound, 100000);
                         //integral.detach();
-                        integralResult = fnInt(clean(graphs[currentFuncIndex]->expression).c_str(), lower_bound, upper_bound, 400000);
+                        integralResult = fnInt(clean(graphs[currentFuncIndex]->expression).c_str(), intLowerBound, intUpperBound, 400000);
                         integralCalculated = true;
                     }
 					if (integralCalculated) {
 						std::string output = std::string("Result: ") + std::to_string(integralResult);
+						ImGui::Text(output.c_str());
+					}
+                }
+                else if (strcmp(calcPreview, "max") == 0) {
+                    ImGui::InputFloat("Lower Bound", &maxLowerBound);
+                    ImGui::InputFloat("Upper Bound", &maxUpperBound);
+                    if (ImGui::Button("Submit##maxSubmit")) {
+                        maxResult = func_max(clean(graphs[currentFuncIndex]->expression).c_str(), maxLowerBound, maxUpperBound);
+                        maxCalculated = true;
+                    }
+					if (maxCalculated) {
+						std::string output = std::string("Result: ") + std::to_string(maxResult);
 						ImGui::Text(output.c_str());
 					}
                 }
