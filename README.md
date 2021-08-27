@@ -23,8 +23,8 @@ for your operating system and run the application.
 # Photos
 <img alt="demo1" src="static/demo/demo1.png">
 <img alt="demo2" src="static/demo/demo2.png">
-<img alt="ui" src="static/demo/ui.png">
-<img alt="ui2" src="static/demo/ui2.png">
+<img alt="ui" src="static/demo/ui.PNG">
+<img alt="ui2" src="static/demo/ui2.PNG">
 
 # About .graph Files
 Graph files are XML-based files used by CurveScape to load and save generated graphs. Although they
