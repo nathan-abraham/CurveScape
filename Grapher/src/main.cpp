@@ -207,6 +207,7 @@ int main(int argc, char* argv[])
 
     if (argc > 1) {
         loadGraphs(graphs, argv[1]);
+        currentFileOpen = argv[1];
     }
 
     while (window.isOpen())
@@ -442,6 +443,7 @@ int main(int argc, char* argv[])
 
 			if (result == NFD_OKAY) {
 				loadGraphs(graphs, rawFilename);
+                currentFileOpen = rawFilename;
 			}
 			else {
 				LOG(NFD_GetError());

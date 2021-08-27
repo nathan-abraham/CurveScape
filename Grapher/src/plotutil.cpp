@@ -349,6 +349,7 @@ void menuFile(EventManager& em, std::vector<Graph*>& graphs, std::string& curren
 
 		if (result == NFD_OKAY) {
 			loadGraphs(graphs, rawFilename);
+            current = rawFilename;
 		}
 		else {
 			LOG(NFD_GetError());

@@ -206,8 +206,6 @@
     <ClCompile Include="src\plotutil.cpp" />
     <ClCompile Include="src\thickLine.cpp" />
     <ClCompile Include="src\tinyexpr\tinyexpr.c" />
-    <ClCompile Include="src\tinyfiledialogs\tinyfiledialogs.c" />
-    <ClCompile Include="src\tinyxml2\tinyxml2.cpp" />
     <ClCompile Include="src\events\userEvent.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -223,8 +221,6 @@
     <ClInclude Include="src\plotutil.h" />
     <ClInclude Include="src\thickLine.h" />
     <ClInclude Include="src\tinyexpr\tinyexpr.h" />
-    <ClInclude Include="src\tinyfiledialogs\tinyfiledialogs.h" />
-    <ClInclude Include="src\tinyxml2\tinyxml2.h" />
     <ClInclude Include="src\events\userEvent.h" />
   </ItemGroup>
   <ItemGroup>
@@ -236,6 +232,9 @@
   <ItemGroup>
     <Image Include="..\static\icon_ico.ico" />
     <Image Include="..\static\test.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="TODO.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

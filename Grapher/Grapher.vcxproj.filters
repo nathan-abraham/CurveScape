@@ -57,13 +57,7 @@
     <ClCompile Include="src\constants.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\tinyfiledialogs\tinyfiledialogs.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\fileOperations.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\tinyxml2\tinyxml2.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\events\userEvent.cpp">
@@ -101,13 +95,7 @@
     <ClInclude Include="src\thickLine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\tinyfiledialogs\tinyfiledialogs.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\fileOperations.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\tinyxml2\tinyxml2.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\events\userEvent.h">
@@ -141,5 +129,8 @@
     <Image Include="..\static\icon_ico.ico">
       <Filter>Resource Files</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="TODO.txt" />
   </ItemGroup>
 </Project>
