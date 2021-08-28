@@ -3,7 +3,6 @@
 #include <regex>
 #include <string.h>
 #include <SFML/Graphics.hpp>
-#include "tinyxml2/tinyxml2.h"
 #include "graph.h"
 #include "fileOperations.h"
 

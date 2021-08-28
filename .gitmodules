@@ -1,0 +1,3 @@
+[submodule "Grapher/Dependencies"]
+	path = Grapher/Dependencies
+	url = https://github.com/nathan-abraham/CurveScape-Dependencies
