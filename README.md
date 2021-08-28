@@ -20,7 +20,7 @@ to **instantly** generate interactive, vibrant graphs.
 Download the binary (CurveScape.executableformat) located in the ```bin``` folder 
 for your operating system and run the application.
 
-# Photos
+# Images
 <img alt="demo1" src="static/demo/demo1.png">
 <img alt="demo2" src="static/demo/demo2.png">
 <img alt="ui" src="static/demo/ui.PNG">
