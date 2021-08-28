@@ -30,7 +30,14 @@ x86/
 [Aa][Rr][Mm]/
 [Aa][Rr][Mm]64/
 bld/
-[Bb]in/
+## [Bb]in/
+
+# Binariess
+bin/intermediates/
+bin/Win32/Debug/
+bin/Win32/Release/CurveScape.pdb
+bin/Win32/Release/imgui.ini
+
 [Oo]bj/
 [Oo]ut/
 [Ll]og/
