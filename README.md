@@ -41,8 +41,8 @@ on .graph files and open them directly in the application.
 ## Note 
 CurveScape is stil in its **early stages of development**. The current version is 0.0.1,
 meaning that it likely has bugs. If you find a bug, please create an issue! Major changes
-to CurveScapes calculation capabilities, graphing system, UI, and more are still to come.
-\
+to CurveScapes calculation capabilities, graphing system, UI, and more are still to come.  
+
 [ImGui](https://github.com/ocornut/imgui) and [Tinyexpr](https://github.com/codeplea/tinyexpr) source files
 are placed in the ```src``` directory for compilation convenience. They are not my files; all rights go to
 their original owners.
