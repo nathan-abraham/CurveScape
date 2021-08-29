@@ -225,9 +225,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\README.md" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="Grapher.rc" />
+    <None Include="CurveScape.aps" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\static\icon_ico.ico" />
@@ -235,6 +233,9 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="TODO.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="CurveScape.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
