@@ -2,15 +2,15 @@
 #include "panelToggledEvent.h"
 
 PanelToggledEvent::PanelToggledEvent(bool* field) {
-	toggleField = field;
+    toggleField = field;
 }
 
 PanelToggledEvent::~PanelToggledEvent() {}
 
 void PanelToggledEvent::undo() {
-	*toggleField = !(*toggleField);
+    *toggleField = !(*toggleField);
 }
 
 void PanelToggledEvent::redo() {
-	*toggleField = !(*toggleField);
+    *toggleField = !(*toggleField);
 }

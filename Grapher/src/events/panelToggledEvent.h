@@ -2,10 +2,10 @@
 
 class PanelToggledEvent : public UserEvent {
 public:
-	bool* toggleField;
+    bool* toggleField;
 
-	PanelToggledEvent(bool*);
-	~PanelToggledEvent();
-	void undo() override;
-	void redo() override;
+    PanelToggledEvent(bool*);
+    ~PanelToggledEvent();
+    void undo() override;
+    void redo() override;
 };

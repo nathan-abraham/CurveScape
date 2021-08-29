@@ -2,10 +2,10 @@
 
 class GraphToggledEvent : public UserEvent {
 public:
-	bool* toggleField;
+    bool* toggleField;
 
-	GraphToggledEvent(bool*);
-	~GraphToggledEvent();
-	void undo() override;
-	void redo() override;
+    GraphToggledEvent(bool*);
+    ~GraphToggledEvent();
+    void undo() override;
+    void redo() override;
 };

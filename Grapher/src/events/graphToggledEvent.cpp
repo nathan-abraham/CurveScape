@@ -2,15 +2,15 @@
 #include "graphToggledEvent.h"
 
 GraphToggledEvent::GraphToggledEvent(bool* field) {
-	toggleField = field;
+    toggleField = field;
 }
 
 GraphToggledEvent::~GraphToggledEvent() {}
 
 void GraphToggledEvent::undo() {
-	*toggleField = !(*toggleField);
+    *toggleField = !(*toggleField);
 }
 
 void GraphToggledEvent::redo() {
-	*toggleField = !(*toggleField);
+    *toggleField = !(*toggleField);
 }

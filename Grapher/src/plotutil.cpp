@@ -47,7 +47,7 @@ std::vector<sf::CircleShape> plot(int width, int height, int rows, const sf::Vec
 
 
 
-void drawGrid(sf::RenderWindow& window, const int& width, const int& height, const int& rows, const sf::Color& lineColor, const float& scaleFactor, 
+void drawGrid(sf::RenderWindow& window, const int& width, const int& height, const int& rows, const sf::Color& lineColor, const float& scaleFactor,
     const sf::Font& font, const sf::Color& bgColor) {
     int gap = width / rows;
     sf::Vector2f sfCurrentCenter = SFMLToCartesian(window.getView().getCenter(), origin);
@@ -56,15 +56,15 @@ void drawGrid(sf::RenderWindow& window, const int& width, const int& height, con
     sf::Vector2f currentCenter = window.getView().getCenter();
     sf::Vector2f currentSize = window.getView().getSize();
 
-	sf::RectangleShape thickLine(sf::Vector2f(currentSize.x, height / 160));
-	thickLine.setPosition(currentCenter.x - currentSize.x / 2, height / 2 - height / 320);
-	thickLine.setFillColor(lineColor);
-	window.draw(thickLine);
+    sf::RectangleShape thickLine(sf::Vector2f(currentSize.x, height / 160));
+    thickLine.setPosition(currentCenter.x - currentSize.x / 2, height / 2 - height / 320);
+    thickLine.setFillColor(lineColor);
+    window.draw(thickLine);
 
-	thickLine = sf::RectangleShape(sf::Vector2f(width / 160, currentSize.y));
-	thickLine.setPosition(width / 2 - width / 320, currentCenter.y - currentSize.y / 2);
-	thickLine.setFillColor(lineColor);
-	window.draw(thickLine);
+    thickLine = sf::RectangleShape(sf::Vector2f(width / 160, currentSize.y));
+    thickLine.setPosition(width / 2 - width / 320, currentCenter.y - currentSize.y / 2);
+    thickLine.setFillColor(lineColor);
+    window.draw(thickLine);
 
     sf::Text text;
     text.setFont(font);
@@ -76,11 +76,11 @@ void drawGrid(sf::RenderWindow& window, const int& width, const int& height, con
     window.draw(text);
 
     for (int i = 0; i < (sfCurrentCenter.x + sfCurrentSize.x) / scaleFactor; i += gap) {
-		sf::Vertex line[] = {
-			sf::Vertex(cartesianToSFML(sf::Vector2f(i * scaleFactor, sfCurrentCenter.y - sfCurrentSize.y), origin), lineColor),
-			sf::Vertex(cartesianToSFML(sf::Vector2f(i * scaleFactor, sfCurrentCenter.y + sfCurrentSize.y), origin), lineColor),
-		};
-		window.draw(line, 2, sf::Lines);
+        sf::Vertex line[] = {
+            sf::Vertex(cartesianToSFML(sf::Vector2f(i * scaleFactor, sfCurrentCenter.y - sfCurrentSize.y), origin), lineColor),
+            sf::Vertex(cartesianToSFML(sf::Vector2f(i * scaleFactor, sfCurrentCenter.y + sfCurrentSize.y), origin), lineColor),
+        };
+        window.draw(line, 2, sf::Lines);
         if (i != 0) {
             text.setString(std::to_string(i / gap));
             sf::FloatRect textRect = text.getGlobalBounds();
@@ -95,11 +95,11 @@ void drawGrid(sf::RenderWindow& window, const int& width, const int& height, con
     }
 
     for (int i = 0; i > (sfCurrentCenter.x - sfCurrentSize.x) / scaleFactor; i -= gap) {
-		sf::Vertex line[] = {
-			sf::Vertex(cartesianToSFML(sf::Vector2f(i * scaleFactor, sfCurrentCenter.y - sfCurrentSize.y), origin), lineColor),
-			sf::Vertex(cartesianToSFML(sf::Vector2f(i * scaleFactor, sfCurrentCenter.y + sfCurrentSize.y), origin), lineColor),
-		};
-		window.draw(line, 2, sf::Lines);
+        sf::Vertex line[] = {
+            sf::Vertex(cartesianToSFML(sf::Vector2f(i * scaleFactor, sfCurrentCenter.y - sfCurrentSize.y), origin), lineColor),
+            sf::Vertex(cartesianToSFML(sf::Vector2f(i * scaleFactor, sfCurrentCenter.y + sfCurrentSize.y), origin), lineColor),
+        };
+        window.draw(line, 2, sf::Lines);
         if (i != 0) {
             text.setString(std::to_string(i / gap));
             sf::FloatRect textRect = text.getGlobalBounds();
@@ -114,11 +114,11 @@ void drawGrid(sf::RenderWindow& window, const int& width, const int& height, con
     }
 
     for (int i = 0; i < (sfCurrentCenter.y - sfCurrentSize.y) / scaleFactor; i += gap) {
-		sf::Vertex line[] = {
-			sf::Vertex(cartesianToSFML(sf::Vector2f(sfCurrentCenter.x + sfCurrentSize.x, i * scaleFactor), origin), lineColor),
-			sf::Vertex(cartesianToSFML(sf::Vector2f(sfCurrentCenter.x - sfCurrentSize.x, i * scaleFactor), origin), lineColor),
-		};
-		window.draw(line, 2, sf::Lines);
+        sf::Vertex line[] = {
+            sf::Vertex(cartesianToSFML(sf::Vector2f(sfCurrentCenter.x + sfCurrentSize.x, i * scaleFactor), origin), lineColor),
+            sf::Vertex(cartesianToSFML(sf::Vector2f(sfCurrentCenter.x - sfCurrentSize.x, i * scaleFactor), origin), lineColor),
+        };
+        window.draw(line, 2, sf::Lines);
         if (i != 0) {
             text.setString(std::to_string(i / gap));
             sf::FloatRect textRect = text.getGlobalBounds();
@@ -133,11 +133,11 @@ void drawGrid(sf::RenderWindow& window, const int& width, const int& height, con
     }
 
     for (int i = 0; i > (sfCurrentCenter.y + sfCurrentSize.y) / scaleFactor; i -= gap) {
-		sf::Vertex line[] = {
-			sf::Vertex(cartesianToSFML(sf::Vector2f(sfCurrentCenter.x + sfCurrentSize.x, i * scaleFactor), origin), lineColor),
-			sf::Vertex(cartesianToSFML(sf::Vector2f(sfCurrentCenter.x - sfCurrentSize.x, i * scaleFactor), origin), lineColor),
-		};
-		window.draw(line, 2, sf::Lines);
+        sf::Vertex line[] = {
+            sf::Vertex(cartesianToSFML(sf::Vector2f(sfCurrentCenter.x + sfCurrentSize.x, i * scaleFactor), origin), lineColor),
+            sf::Vertex(cartesianToSFML(sf::Vector2f(sfCurrentCenter.x - sfCurrentSize.x, i * scaleFactor), origin), lineColor),
+        };
+        window.draw(line, 2, sf::Lines);
         if (i != 0) {
             text.setString(std::to_string(i / gap));
             sf::FloatRect textRect = text.getGlobalBounds();
@@ -152,7 +152,7 @@ void drawGrid(sf::RenderWindow& window, const int& width, const int& height, con
     }
 }
 
-void drawGrid2(sf::RenderWindow& window, const int& width, const int& height, const int& rows, const sf::Color& lineColor, const float& scaleFactor, 
+void drawGrid2(sf::RenderWindow& window, const int& width, const int& height, const int& rows, const sf::Color& lineColor, const float& scaleFactor,
     const sf::Font& font, const sf::Color& bgColor) {
 
     const int gap = width / rows;
@@ -164,15 +164,15 @@ void drawGrid2(sf::RenderWindow& window, const int& width, const int& height, co
     sf::Vector2f currentCenter = window.getView().getCenter();
     sf::Vector2f currentSize = window.getView().getSize();
 
-	sf::RectangleShape thickLine(sf::Vector2f(currentSize.x, height / 160));
-	thickLine.setPosition(currentCenter.x - currentSize.x / 2, height / 2 - height / 320);
-	thickLine.setFillColor(lineColor);
-	window.draw(thickLine);
+    sf::RectangleShape thickLine(sf::Vector2f(currentSize.x, height / 160));
+    thickLine.setPosition(currentCenter.x - currentSize.x / 2, height / 2 - height / 320);
+    thickLine.setFillColor(lineColor);
+    window.draw(thickLine);
 
-	thickLine = sf::RectangleShape(sf::Vector2f(width / 160, currentSize.y));
-	thickLine.setPosition(width / 2 - width / 320, currentCenter.y - currentSize.y / 2);
-	thickLine.setFillColor(lineColor);
-	window.draw(thickLine);
+    thickLine = sf::RectangleShape(sf::Vector2f(width / 160, currentSize.y));
+    thickLine.setPosition(width / 2 - width / 320, currentCenter.y - currentSize.y / 2);
+    thickLine.setFillColor(lineColor);
+    window.draw(thickLine);
 
     sf::Text text;
     text.setFont(font);
@@ -184,11 +184,11 @@ void drawGrid2(sf::RenderWindow& window, const int& width, const int& height, co
     window.draw(text);
 
     for (int i = 0; i < (sfCurrentCenter.x + sfCurrentSize.x) / scaleFactor; i += gap) {
-		sf::Vertex line[] = {
-			sf::Vertex(cartesianToSFML(sf::Vector2f(i * scaleFactor, sfCurrentCenter.y - sfCurrentSize.y), origin), lineColor),
-			sf::Vertex(cartesianToSFML(sf::Vector2f(i * scaleFactor, sfCurrentCenter.y + sfCurrentSize.y), origin), lineColor),
-		};
-		window.draw(line, 2, sf::Lines);
+        sf::Vertex line[] = {
+            sf::Vertex(cartesianToSFML(sf::Vector2f(i * scaleFactor, sfCurrentCenter.y - sfCurrentSize.y), origin), lineColor),
+            sf::Vertex(cartesianToSFML(sf::Vector2f(i * scaleFactor, sfCurrentCenter.y + sfCurrentSize.y), origin), lineColor),
+        };
+        window.draw(line, 2, sf::Lines);
         if (i != 0) {
             text.setString(std::to_string(i / gap));
             sf::FloatRect textRect = text.getGlobalBounds();
@@ -203,11 +203,11 @@ void drawGrid2(sf::RenderWindow& window, const int& width, const int& height, co
     }
 
     for (int i = 0; i > (sfCurrentCenter.x - sfCurrentSize.x) / scaleFactor; i -= gap) {
-		sf::Vertex line[] = {
-			sf::Vertex(cartesianToSFML(sf::Vector2f(i * scaleFactor, sfCurrentCenter.y - sfCurrentSize.y), origin), lineColor),
-			sf::Vertex(cartesianToSFML(sf::Vector2f(i * scaleFactor, sfCurrentCenter.y + sfCurrentSize.y), origin), lineColor),
-		};
-		window.draw(line, 2, sf::Lines);
+        sf::Vertex line[] = {
+            sf::Vertex(cartesianToSFML(sf::Vector2f(i * scaleFactor, sfCurrentCenter.y - sfCurrentSize.y), origin), lineColor),
+            sf::Vertex(cartesianToSFML(sf::Vector2f(i * scaleFactor, sfCurrentCenter.y + sfCurrentSize.y), origin), lineColor),
+        };
+        window.draw(line, 2, sf::Lines);
         if (i != 0) {
             text.setString(std::to_string(i / gap));
             sf::FloatRect textRect = text.getGlobalBounds();
@@ -222,11 +222,11 @@ void drawGrid2(sf::RenderWindow& window, const int& width, const int& height, co
     }
 
     for (int i = 0; i < (sfCurrentCenter.y - sfCurrentSize.y) / scaleFactor; i += gap) {
-		sf::Vertex line[] = {
-			sf::Vertex(cartesianToSFML(sf::Vector2f(sfCurrentCenter.x + sfCurrentSize.x, i * scaleFactor), origin), lineColor),
-			sf::Vertex(cartesianToSFML(sf::Vector2f(sfCurrentCenter.x - sfCurrentSize.x, i * scaleFactor), origin), lineColor),
-		};
-		window.draw(line, 2, sf::Lines);
+        sf::Vertex line[] = {
+            sf::Vertex(cartesianToSFML(sf::Vector2f(sfCurrentCenter.x + sfCurrentSize.x, i * scaleFactor), origin), lineColor),
+            sf::Vertex(cartesianToSFML(sf::Vector2f(sfCurrentCenter.x - sfCurrentSize.x, i * scaleFactor), origin), lineColor),
+        };
+        window.draw(line, 2, sf::Lines);
         if (i != 0) {
             text.setString(std::to_string(i / gap));
             sf::FloatRect textRect = text.getGlobalBounds();
@@ -241,11 +241,11 @@ void drawGrid2(sf::RenderWindow& window, const int& width, const int& height, co
     }
 
     for (int i = 0; i > (sfCurrentCenter.y + sfCurrentSize.y) / scaleFactor; i -= gap) {
-		sf::Vertex line[] = {
-			sf::Vertex(cartesianToSFML(sf::Vector2f(sfCurrentCenter.x + sfCurrentSize.x, i * scaleFactor), origin), lineColor),
-			sf::Vertex(cartesianToSFML(sf::Vector2f(sfCurrentCenter.x - sfCurrentSize.x, i * scaleFactor), origin), lineColor),
-		};
-		window.draw(line, 2, sf::Lines);
+        sf::Vertex line[] = {
+            sf::Vertex(cartesianToSFML(sf::Vector2f(sfCurrentCenter.x + sfCurrentSize.x, i * scaleFactor), origin), lineColor),
+            sf::Vertex(cartesianToSFML(sf::Vector2f(sfCurrentCenter.x - sfCurrentSize.x, i * scaleFactor), origin), lineColor),
+        };
+        window.draw(line, 2, sf::Lines);
         if (i != 0) {
             text.setString(std::to_string(i / gap));
             sf::FloatRect textRect = text.getGlobalBounds();
@@ -301,7 +301,7 @@ void take_screenshot(const sf::RenderWindow& window, const std::string& filename
     }
 }
 
-void mainMenuBar(EventManager& em, std::vector<Graph*>& graphs, std::string& current, std::string& imageFilename, bool& main, bool& panel, 
+void mainMenuBar(EventManager& em, std::vector<Graph*>& graphs, std::string& current, std::string& imageFilename, bool& main, bool& panel,
     bool& calc, bool& screen, int& frame, bool& saveAsFlag, bool& saveFlag, bool& openFlag)
 {
     if (ImGui::BeginMainMenuBar())
@@ -318,7 +318,7 @@ void mainMenuBar(EventManager& em, std::vector<Graph*>& graphs, std::string& cur
             }
             if (ImGui::MenuItem("Redo", "CTRL+Y", false, !em.redo.empty())) {
                 em.redo_event();
-            } 
+            }
             ImGui::Separator();
             if (ImGui::MenuItem("Cut", "CTRL+X")) {}
             if (ImGui::MenuItem("Copy", "CTRL+C")) {}
@@ -340,20 +340,20 @@ void mainMenuBar(EventManager& em, std::vector<Graph*>& graphs, std::string& cur
     }
 }
 
-void menuFile(EventManager& em, std::vector<Graph*>& graphs, std::string& current, std::string& imageFilename, bool& main, bool& panel, 
+void menuFile(EventManager& em, std::vector<Graph*>& graphs, std::string& current, std::string& imageFilename, bool& main, bool& panel,
     bool& calc, bool& screen, int& frame, bool& saveAsFlag, bool& saveFlag, bool& openFlag)
 {
     if (ImGui::MenuItem("Open", "Ctrl+O")) {
-		nfdchar_t* rawFilename;
-		nfdresult_t result = NFD_OpenDialog("graph", NULL, &rawFilename);
+        nfdchar_t* rawFilename;
+        nfdresult_t result = NFD_OpenDialog("graph", NULL, &rawFilename);
 
-		if (result == NFD_OKAY) {
-			loadGraphs(graphs, rawFilename);
+        if (result == NFD_OKAY) {
+            loadGraphs(graphs, rawFilename);
             current = rawFilename;
-		}
-		else {
-			LOG(NFD_GetError());
-		}
+        }
+        else {
+            LOG(NFD_GetError());
+        }
     }
     if (ImGui::BeginMenu("Open Recent"))
     {
@@ -375,7 +375,7 @@ void menuFile(EventManager& em, std::vector<Graph*>& graphs, std::string& curren
     }
     if (ImGui::MenuItem("Save", "Ctrl+S")) {
         if (current == "" || current.find(".png") != std::string::npos
-                || current.find(".jpg") != std::string::npos) {
+            || current.find(".jpg") != std::string::npos) {
             saveAsFlag = true;
         }
         else {
@@ -384,37 +384,37 @@ void menuFile(EventManager& em, std::vector<Graph*>& graphs, std::string& curren
         }
     }
     if (ImGui::MenuItem("Save As...") || saveAsFlag) {
-		nfdchar_t* rawFilename;
-		nfdresult_t result = NFD_SaveDialog("png;jpg;graph", NULL, &rawFilename);
+        nfdchar_t* rawFilename;
+        nfdresult_t result = NFD_SaveDialog("png;jpg;graph", NULL, &rawFilename);
 
-		if (result == NFD_OKAY) {
-			current = rawFilename;
-			if (current.find(".graph") != std::string::npos) {
-				saveGraphs(graphs, rawFilename);
-			}
-			else {
-				imageFilename = rawFilename;
+        if (result == NFD_OKAY) {
+            current = rawFilename;
+            if (current.find(".graph") != std::string::npos) {
+                saveGraphs(graphs, rawFilename);
+            }
+            else {
+                imageFilename = rawFilename;
 
-				if (imageFilename.substr(imageFilename.size() - 4).find(".") == std::string::npos) {
-					LOG("added extension")
-					imageFilename += ".png";
-				}
+                if (imageFilename.substr(imageFilename.size() - 4).find(".") == std::string::npos) {
+                    LOG("added extension")
+                        imageFilename += ".png";
+                }
                 main = false;
-				panel = false;
-				calc = false;
-				screen = true;
-				frame = 0;
-			}
+                panel = false;
+                calc = false;
+                screen = true;
+                frame = 0;
+            }
             saveAsFlag = false;
-		}
-		else if (result == NFD_CANCEL) {
+        }
+        else if (result == NFD_CANCEL) {
             saveAsFlag = false;
-			LOG("canceled saving")
-		}
-		else {
-			LOG(NFD_GetError());
-		}
-    
+            LOG("canceled saving")
+        }
+        else {
+            LOG(NFD_GetError());
+        }
+
     }
 
     ImGui::Separator();

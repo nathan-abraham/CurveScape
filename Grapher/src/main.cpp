@@ -31,7 +31,7 @@
 #define LOG(x) std::cout << (x) << std::endl;
 #define GET_VAR_NAME(var) (#var)
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
     //std::cout << sf::VideoMode::getDesktopMode().width << ", " << sf::VideoMode::getDesktopMode().height << std::endl;
     std::cout << argc << " arguments" << std::endl;
@@ -65,17 +65,19 @@ int main(int argc, char* argv[])
 
     std::string currentPath = argv[0];
     currentPath = currentPath.substr(0, currentPath.size() - std::string("CurveScape.exe").size());
-    if (!font.loadFromFile(currentPath + std::string("assets\\OpenSans-Regular.ttf"))) {
+    if (!font.loadFromFile(currentPath + std::string("assets\\OpenSans-Regular.ttf")))
+    {
         LOG("Could not load font")
         return 2;
     }
 
-    ImGuiIO& IO = ImGui::GetIO();
+    ImGuiIO &IO = ImGui::GetIO();
 
     //if (exists("assets/OpenSans-Bold.ttf")) {
     //    IO.Fonts->AddFontFromFileTTF("assets/OpenSans-Bold.ttf", 18);
     //}
-    if (exists(currentPath + std::string("assets\\OpenSans-Bold.ttf"))) {
+    if (exists(currentPath + std::string("assets\\OpenSans-Bold.ttf")))
+    {
         IO.Fonts->AddFontFromFileTTF(std::string(currentPath + std::string("assets\\OpenSans-Bold.ttf")).c_str(), 18);
     }
 
@@ -95,7 +97,7 @@ int main(int argc, char* argv[])
     ImGui::GetStyle().FrameRounding = 4.0f;
     ImGui::GetStyle().GrabRounding = 4.0f;
 
-    ImVec4* colors = ImGui::GetStyle().Colors;
+    ImVec4 *colors = ImGui::GetStyle().Colors;
     colors[ImGuiCol_Text] = ImVec4(0.95f, 0.96f, 0.98f, 1.00f);
     colors[ImGuiCol_TextDisabled] = ImVec4(0.36f, 0.42f, 0.47f, 1.00f);
     colors[ImGuiCol_WindowBg] = ImVec4(0.11f, 0.15f, 0.17f, 1.00f);
@@ -145,11 +147,10 @@ int main(int argc, char* argv[])
     colors[ImGuiCol_NavWindowingDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.20f);
     colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.35f);
 
-
     std::array<sf::Color, 6> graphColors = {atomRed, atomBlue, atomGreen, atomCyan, atomOrange, atomPurple};
     int colorIndex = 0;
-    
-    std::vector<Graph*> graphs;
+
+    std::vector<Graph *> graphs;
 
     static int currentFuncIndex = 0;
     static int currentCalcIndex = 0;
@@ -165,8 +166,8 @@ int main(int argc, char* argv[])
     static bool saveFlag = false;
     static bool openFlag = false;
 
-    static const char* comboPreview = "Select a function";
-    static const char* calcPreview = "Select a calculation";
+    static const char *comboPreview = "Select a function";
+    static const char *calcPreview = "Select a calculation";
 
     static std::string imageFilename;
     static std::string currentFileOpen = "";
@@ -191,21 +192,22 @@ int main(int argc, char* argv[])
     Graph y5("", "y5", true, graphColors[4]);
     Graph y6("", "y6", true, graphColors[5]);
 
-    graphs.push_back(&y1); 
-    graphs.push_back(&y2); 
-    graphs.push_back(&y3); 
-    graphs.push_back(&y4); 
-    graphs.push_back(&y5); 
-    graphs.push_back(&y6); 
+    graphs.push_back(&y1);
+    graphs.push_back(&y2);
+    graphs.push_back(&y3);
+    graphs.push_back(&y4);
+    graphs.push_back(&y5);
+    graphs.push_back(&y6);
 
-    static const char* options[] = {
+    static const char *options[] = {
         "nDeriv",
         "fnInt",
         "max",
     };
     static const int numOptions = 3;
 
-    if (argc > 1) {
+    if (argc > 1)
+    {
         loadGraphs(graphs, argv[1]);
         currentFileOpen = argv[1];
     }
@@ -220,92 +222,112 @@ int main(int argc, char* argv[])
             if (event.type == sf::Event::Closed)
                 window.close();
 
-            if (event.type == sf::Event::MouseButtonPressed && !imGuiFocused) {
-                if (event.mouseButton.button == 0) {
+            if (event.type == sf::Event::MouseButtonPressed && !imGuiFocused)
+            {
+                if (event.mouseButton.button == 0)
+                {
                     moving = true;
                     oldPos = window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y));
                 }
             }
 
-            else if (event.type == sf::Event::MouseButtonReleased) {
-                if (event.mouseButton.button == 0) {
+            else if (event.type == sf::Event::MouseButtonReleased)
+            {
+                if (event.mouseButton.button == 0)
+                {
                     moving = false;
                 }
             }
 
-            if (event.type == sf::Event::MouseMoved && !imGuiFocused) {
-                if (moving) {
+            if (event.type == sf::Event::MouseMoved && !imGuiFocused)
+            {
+                if (moving)
+                {
                     const sf::Vector2f newPos = window.mapPixelToCoords(sf::Vector2i(event.mouseMove.x, event.mouseMove.y));
                     const sf::Vector2f deltaPos = oldPos - newPos;
                     view.setCenter(view.getCenter() + deltaPos);
                     window.setView(view);
                     oldPos = window.mapPixelToCoords(sf::Vector2i(event.mouseMove.x, event.mouseMove.y));
 
-					for (Graph* graph : graphs) {
-						graph->updatePoints();
-					}
+                    for (Graph *graph : graphs)
+                    {
+                        graph->updatePoints();
+                    }
                 }
             }
 
-            else if (event.type == sf::Event::Resized) {
+            else if (event.type == sf::Event::Resized)
+            {
                 sf::FloatRect visibleArea(0.f, 0.f, event.size.width, event.size.height);
                 view.reset(visibleArea);
                 window.setView(sf::View(visibleArea));
                 Graph::numPoints = (int)event.size.width;
-				for (Graph* graph : graphs) {
-					graph->updatePoints();
-				}
+                for (Graph *graph : graphs)
+                {
+                    graph->updatePoints();
+                }
             }
 
-            if (event.type == sf::Event::MouseWheelScrolled && !IO.WantCaptureMouse) {
-                if (event.mouseWheelScroll.delta > 0 && Graph::scaleFactor * (1 + zoomIncrement) <= SCALE_MAX + zoomOffset) {
-                    zoomViewAt({ event.mouseWheelScroll.x, event.mouseWheelScroll.y }, window, view, Graph::scaleFactor, zoomIncrement);
+            if (event.type == sf::Event::MouseWheelScrolled && !IO.WantCaptureMouse)
+            {
+                if (event.mouseWheelScroll.delta > 0 && Graph::scaleFactor * (1 + zoomIncrement) <= SCALE_MAX + zoomOffset)
+                {
+                    zoomViewAt({event.mouseWheelScroll.x, event.mouseWheelScroll.y}, window, view, Graph::scaleFactor, zoomIncrement);
                     //zoomViewAt({ event.mouseWheelScroll.x, event.mouseWheelScroll.y }, window, view, (1.f / zoomAmount));
-					for (Graph* graph : graphs) {
-						graph->updatePoints();
-					}
+                    for (Graph *graph : graphs)
+                    {
+                        graph->updatePoints();
+                    }
                 }
-                else if (event.mouseWheelScroll.delta < 0 && Graph::scaleFactor * (1 - zoomIncrement) >= SCALE_MIN - zoomOffset) {
-                    zoomViewAt({ event.mouseWheelScroll.x, event.mouseWheelScroll.y }, window, view, Graph::scaleFactor, -zoomIncrement);
+                else if (event.mouseWheelScroll.delta < 0 && Graph::scaleFactor * (1 - zoomIncrement) >= SCALE_MIN - zoomOffset)
+                {
+                    zoomViewAt({event.mouseWheelScroll.x, event.mouseWheelScroll.y}, window, view, Graph::scaleFactor, -zoomIncrement);
                     //zoomViewAt({ event.mouseWheelScroll.x, event.mouseWheelScroll.y }, window, view, zoomAmount);
-					for (Graph* graph : graphs) {
-						graph->updatePoints();
-					}
+                    for (Graph *graph : graphs)
+                    {
+                        graph->updatePoints();
+                    }
                 }
             }
 
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && !imGuiFocused) {
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && !imGuiFocused)
+            {
                 if (Graph::scaleFactor - zoomIncrement > SCALE_MIN - zoomOffset)
                     Graph::scaleFactor -= zoomIncrement;
-				for (Graph* graph : graphs) {
-					graph->updatePoints();
-				}
+                for (Graph *graph : graphs)
+                {
+                    graph->updatePoints();
+                }
             }
-            else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && !imGuiFocused) {
+            else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && !imGuiFocused)
+            {
                 if (Graph::scaleFactor + zoomIncrement < SCALE_MAX + zoomOffset)
                     Graph::scaleFactor += zoomIncrement;
-				for (Graph* graph : graphs) {
-					graph->updatePoints();
-				}
+                for (Graph *graph : graphs)
+                {
+                    graph->updatePoints();
+                }
             }
 
             if ((sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) ||
-                sf::Keyboard::isKeyPressed(sf::Keyboard::RControl)) &&
-                sf::Keyboard::isKeyPressed(sf::Keyboard::O)) {
+                 sf::Keyboard::isKeyPressed(sf::Keyboard::RControl)) &&
+                sf::Keyboard::isKeyPressed(sf::Keyboard::O))
+            {
                 openFlag = true;
             }
             else if ((sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) ||
-                sf::Keyboard::isKeyPressed(sf::Keyboard::RControl)) &&
-                sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+                      sf::Keyboard::isKeyPressed(sf::Keyboard::RControl)) &&
+                     sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+            {
                 saveFlag = true;
             }
         }
 
         // Debug
-        if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+        {
             //std::cout << "Left mouse button pressed" << std::endl;
         }
-
 
         ImGui::SFML::Update(window, deltaClock.restart());
 
@@ -313,64 +335,77 @@ int main(int argc, char* argv[])
         ImGui::ShowDemoWindow();
 #endif
 
-        if (mainActive) {
-            mainMenuBar(eventManager, graphs, currentFileOpen, imageFilename, mainActive, panelActive, 
-                calcActive, screenshotFlag, frameDelay, saveAsFlag, saveFlag, openFlag);
+        if (mainActive)
+        {
+            mainMenuBar(eventManager, graphs, currentFileOpen, imageFilename, mainActive, panelActive,
+                        calcActive, screenshotFlag, frameDelay, saveAsFlag, saveFlag, openFlag);
         }
 
-        if (panelActive) {
+        if (panelActive)
+        {
 
             ImGui::Begin("Graphing Panel", &panelActive, ImGuiWindowFlags_MenuBar); // begin window
 
             ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[0]);
 
-            if (ImGui::SliderFloat("Zoom", &Graph::scaleFactor, SCALE_MIN, SCALE_MAX)) {
-                for (Graph* graph : graphs) {
+            if (ImGui::SliderFloat("Zoom", &Graph::scaleFactor, SCALE_MIN, SCALE_MAX))
+            {
+                for (Graph *graph : graphs)
+                {
                     graph->updatePoints();
                 }
             }
 
-            for (int i = 0; i < graphs.size(); ++i) {
-                if (ImGui::InputText(graphs[i]->name, graphs[i]->expression, IM_ARRAYSIZE(graphs[i]->expression))) {
+            for (int i = 0; i < graphs.size(); ++i)
+            {
+                if (ImGui::InputText(graphs[i]->name, graphs[i]->expression, IM_ARRAYSIZE(graphs[i]->expression)))
+                {
                     //if (!ImGui::IsKeyPressed(59) && !ImGui::IsKeyPressed(66)) {
                     //    eventManager.addEvent(new TextEnteredEvent(graphs[i]->expression));
                     //    LOG("added event")
                     //}
                     //else {
-                        //eventManager.addEvent(new TextDeletedEvent(graphs[i]->expression, eventManager.undo.top()->lastChar));
+                    //eventManager.addEvent(new TextDeletedEvent(graphs[i]->expression, eventManager.undo.top()->lastChar));
                     //}
                     graphs[i]->parseExpr();
                     graphs[i]->updatePoints();
                 }
                 ImGui::SameLine(0, 20);
 
-                if (i < graphColors.size()) {
-                    sf::Color& current = graphColors[i];
+                if (i < graphColors.size())
+                {
+                    sf::Color &current = graphColors[i];
                     colors[ImGuiCol_CheckMark] = ImVec4(current.r / 255.0f, current.g / 255.0f, current.b / 255.0f, 1.0f);
                 }
-                if (ImGui::Checkbox(graphs[i]->checkName, &graphs[i]->on)) {
+                if (ImGui::Checkbox(graphs[i]->checkName, &graphs[i]->on))
+                {
                     eventManager.addEvent(new GraphToggledEvent(&graphs[i]->on));
                 }
             }
-
 
             ImGui::PopFont();
             ImGui::End(); // end window
         }
 
-        if (calcActive) {
+        if (calcActive)
+        {
             ImGui::Begin("Calculate", &calcActive);
             ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[0]);
 
-            if (ImGui::BeginCombo("##selectFunc", comboPreview)) {
-                for (int i = 0; i < graphs.size(); i++) {
-                    if (strcmp(graphs[i]->expression, "") == 0) continue;
+            if (ImGui::BeginCombo("##selectFunc", comboPreview))
+            {
+                for (int i = 0; i < graphs.size(); i++)
+                {
+                    if (strcmp(graphs[i]->expression, "") == 0)
+                        continue;
                     const bool is_selected = i == currentFuncIndex;
-                    if (ImGui::Selectable(graphs[i]->expression, is_selected)) {
+                    if (ImGui::Selectable(graphs[i]->expression, is_selected))
+                    {
                         currentFuncIndex = i;
                         comboPreview = graphs[i]->expression;
                     }
-                    if (is_selected) {
+                    if (is_selected)
+                    {
                         ImGui::SetItemDefaultFocus();
                     }
                 }
@@ -378,57 +413,71 @@ int main(int argc, char* argv[])
                 ImGui::EndCombo();
             }
 
-            if (strcmp(comboPreview, "Select a function") != 0) {
-                if (ImGui::BeginCombo("##selectCalc", calcPreview)) {
-                    for (int i = 0; i < numOptions; i++) {
+            if (strcmp(comboPreview, "Select a function") != 0)
+            {
+                if (ImGui::BeginCombo("##selectCalc", calcPreview))
+                {
+                    for (int i = 0; i < numOptions; i++)
+                    {
                         const bool calc_selected = i == currentCalcIndex;
-                        if (ImGui::Selectable(options[i], calc_selected)) {
+                        if (ImGui::Selectable(options[i], calc_selected))
+                        {
                             currentCalcIndex = i;
                             calcPreview = options[i];
                         }
-                        if (calc_selected) {
+                        if (calc_selected)
+                        {
                             ImGui::SetItemDefaultFocus();
                         }
                     }
                     ImGui::EndCombo();
                 }
 
-                if (strcmp(calcPreview, "nDeriv") == 0) {
+                if (strcmp(calcPreview, "nDeriv") == 0)
+                {
                     ImGui::InputFloat("x-value", &x_coor);
-                    if (ImGui::Button("Submit##derivSumbit")) {
+                    if (ImGui::Button("Submit##derivSumbit"))
+                    {
                         derivativeResult = nDeriv(clean(graphs[currentFuncIndex]->expression).c_str(), x_coor);
                         derivativeCalculated = true;
                     }
-                    if (derivativeCalculated) {
-						std::string output = std::string("Result: ") + std::to_string(derivativeResult);
-						ImGui::Text(output.c_str());
+                    if (derivativeCalculated)
+                    {
+                        std::string output = std::string("Result: ") + std::to_string(derivativeResult);
+                        ImGui::Text(output.c_str());
                     }
                 }
-                else if (strcmp(calcPreview, "fnInt") == 0) {
+                else if (strcmp(calcPreview, "fnInt") == 0)
+                {
                     ImGui::InputFloat("Lower Bound", &intLowerBound);
                     ImGui::InputFloat("Upper Bound", &intUpperBound);
-                    if (ImGui::Button("Submit##intSumbit")) {
+                    if (ImGui::Button("Submit##intSumbit"))
+                    {
                         //std::thread integral(fnInt, graphs[currentFuncIndex]->expression, lower_bound, upper_bound, 100000);
                         //integral.detach();
                         integralResult = fnInt(clean(graphs[currentFuncIndex]->expression).c_str(), intLowerBound, intUpperBound, 400000);
                         integralCalculated = true;
                     }
-					if (integralCalculated) {
-						std::string output = std::string("Result: ") + std::to_string(integralResult);
-						ImGui::Text(output.c_str());
-					}
+                    if (integralCalculated)
+                    {
+                        std::string output = std::string("Result: ") + std::to_string(integralResult);
+                        ImGui::Text(output.c_str());
+                    }
                 }
-                else if (strcmp(calcPreview, "max") == 0) {
+                else if (strcmp(calcPreview, "max") == 0)
+                {
                     ImGui::InputFloat("Lower Bound", &maxLowerBound);
                     ImGui::InputFloat("Upper Bound", &maxUpperBound);
-                    if (ImGui::Button("Submit##maxSubmit")) {
+                    if (ImGui::Button("Submit##maxSubmit"))
+                    {
                         maxResult = func_max(clean(graphs[currentFuncIndex]->expression).c_str(), maxLowerBound, maxUpperBound);
                         maxCalculated = true;
                     }
-					if (maxCalculated) {
-						std::string output = std::string("Result: ") + std::to_string(maxResult);
-						ImGui::Text(output.c_str());
-					}
+                    if (maxCalculated)
+                    {
+                        std::string output = std::string("Result: ") + std::to_string(maxResult);
+                        ImGui::Text(output.c_str());
+                    }
                 }
             }
 
@@ -437,88 +486,102 @@ int main(int argc, char* argv[])
         }
         imGuiFocused = ImGui::IsAnyItemActive();
 
-        if (openFlag) {
-			nfdchar_t* rawFilename;
-			nfdresult_t result = NFD_OpenDialog("graph", NULL, &rawFilename);
+        if (openFlag)
+        {
+            nfdchar_t *rawFilename;
+            nfdresult_t result = NFD_OpenDialog("graph", NULL, &rawFilename);
 
-			if (result == NFD_OKAY) {
-				loadGraphs(graphs, rawFilename);
+            if (result == NFD_OKAY)
+            {
+                loadGraphs(graphs, rawFilename);
                 currentFileOpen = rawFilename;
-			}
-			else {
-				LOG(NFD_GetError());
-			}
+            }
+            else
+            {
+                LOG(NFD_GetError());
+            }
             openFlag = false;
         }
-        else if (saveFlag) {
-			if (currentFileOpen == "" || currentFileOpen.find(".png") != std::string::npos
-                || currentFileOpen.find(".jpg") != std::string::npos) {
-				saveAsFlag = true;
-			}
-			else {
-				saveAsFlag = false;
-				saveGraphs(graphs, currentFileOpen.c_str());
-			}
+        else if (saveFlag)
+        {
+            if (currentFileOpen == "" || currentFileOpen.find(".png") != std::string::npos || currentFileOpen.find(".jpg") != std::string::npos)
+            {
+                saveAsFlag = true;
+            }
+            else
+            {
+                saveAsFlag = false;
+                saveGraphs(graphs, currentFileOpen.c_str());
+            }
             saveFlag = false;
         }
 
-        if (saveAsFlag) {
+        if (saveAsFlag)
+        {
             LOG("main loop save as")
-			nfdchar_t* rawFilename;
-			nfdresult_t result = NFD_SaveDialog("png;jpg;graph", NULL, &rawFilename);
+            nfdchar_t *rawFilename;
+            nfdresult_t result = NFD_SaveDialog("png;jpg;graph", NULL, &rawFilename);
 
-			if (result == NFD_OKAY) {
-				currentFileOpen = rawFilename;
-				if (currentFileOpen.find(".graph") != std::string::npos) {
-					saveGraphs(graphs, rawFilename);
-				}
-				else {
-					imageFilename = rawFilename;
+            if (result == NFD_OKAY)
+            {
+                currentFileOpen = rawFilename;
+                if (currentFileOpen.find(".graph") != std::string::npos)
+                {
+                    saveGraphs(graphs, rawFilename);
+                }
+                else
+                {
+                    imageFilename = rawFilename;
 
-					if (imageFilename.substr(imageFilename.size() - 4).find(".") == std::string::npos) {
-						LOG("added extension")
-						imageFilename += ".png";
-					}
-					mainActive = false;
-					panelActive = false;
-					calcActive = false;
-					screenshotFlag = true;
-					frameDelay = 0;
-				}
-
-			}
-			else if (result == NFD_CANCEL) {
-				LOG("canceled saving")
-			}
-			else {
-				LOG(NFD_GetError());
-			}
+                    if (imageFilename.substr(imageFilename.size() - 4).find(".") == std::string::npos)
+                    {
+                        LOG("added extension")
+                        imageFilename += ".png";
+                    }
+                    mainActive = false;
+                    panelActive = false;
+                    calcActive = false;
+                    screenshotFlag = true;
+                    frameDelay = 0;
+                }
+            }
+            else if (result == NFD_CANCEL)
+            {
+                LOG("canceled saving")
+            }
+            else
+            {
+                LOG(NFD_GetError());
+            }
             saveAsFlag = false;
         }
 
-		if (screenshotFlag && !panelActive && !calcActive && frameDelay == 3) {
-			take_screenshot(window, imageFilename);
-			panelActive = true;
-			calcActive = true;
+        if (screenshotFlag && !panelActive && !calcActive && frameDelay == 3)
+        {
+            take_screenshot(window, imageFilename);
+            panelActive = true;
+            calcActive = true;
             mainActive = true;
-		}
+        }
 
-		window.clear(bgColor);
-		drawGrid2(window, winWidth, winHeight, ROWS, lineColor, Graph::scaleFactor, font, bgColor);
-		for (int i = 0; i < graphs.size(); ++i) {
-			if (graphs[i]->on)
-				graphs[i]->draw(window);
-		}
+        window.clear(bgColor);
+        drawGrid2(window, winWidth, winHeight, ROWS, lineColor, Graph::scaleFactor, font, bgColor);
+        for (int i = 0; i < graphs.size(); ++i)
+        {
+            if (graphs[i]->on)
+                graphs[i]->draw(window);
+        }
 
-		ImGui::SFML::Render(window);
-		window.display();
+        ImGui::SFML::Render(window);
+        window.display();
 
-        if (frameDelay > 100000) {
+        if (frameDelay > 100000)
+        {
             frameDelay = 50;
         }
         frameDelay++;
     }
-    
+
     ImGui::SFML::Shutdown();
 
     return 0;
