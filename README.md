@@ -19,7 +19,10 @@ to **instantly** generate interactive, vibrant graphs.
 # Install
 Download the binary (CurveScape.executableformat) located in the ```bin``` folder 
 for your operating system along with the ```assets``` folder. Run the executable
-in the same directory as the ```assets``` folder.
+in the same directory as the ```assets``` foldero.  
+
+**Note**: If cloning the repository, make sure to use ```git clone <url> --recursive``` to clone
+the Dependencies submodule.
 
 # Images
 <img alt="demo1" src="static/demo/demo1.png">
