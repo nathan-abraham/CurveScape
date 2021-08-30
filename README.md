@@ -4,7 +4,7 @@
 # CurveScape
 
 CurveScape is a lightweight, colorful graphing application and graphing calculator
-focused on efficiency and usability. Type in mathematicsl functions (e.g. sin(x)) 
+focused on efficiency and usability. Type in mathematical functions (e.g. sin(x)) 
 to **instantly** generate interactive, vibrant graphs.
 
 ## Features
