@@ -2,7 +2,7 @@
 CurveScape/TODO.txt
 CurveScape/src/legacy/
 dist/
-dist_zipped.zip
+CurveScape_Release.zip
 
 
 ## Ignore Visual Studio temporary files, build results, and
