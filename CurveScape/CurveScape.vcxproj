@@ -197,6 +197,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="src\LineShape.cpp" />
     <ClCompile Include="src\main.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
@@ -218,6 +219,7 @@
     <ClInclude Include="src\events\panelToggledEvent.h" />
     <ClInclude Include="src\fileOperations.h" />
     <ClInclude Include="src\graph.h" />
+    <ClInclude Include="src\LineShape.hpp" />
     <ClInclude Include="src\plotutil.h" />
     <ClInclude Include="src\thickLine.h" />
     <ClInclude Include="src\tinyexpr\tinyexpr.h" />

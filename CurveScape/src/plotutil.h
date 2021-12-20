@@ -23,7 +23,7 @@ void take_screenshot(const sf::RenderWindow& window, const std::string& filename
 
 
 void mainMenuBar(EventManager& em, std::vector<Graph*>& graphs, std::string& current, std::string& imageFilename, bool& main, bool& panel, 
-    bool& calc, bool& screen, int& frame, bool& saveAsFlag, bool& saveFlag, bool& openFlag);
+    bool& calc, bool& polarPanel, bool& screen, int& frame, bool& saveAsFlag, bool& saveFlag, bool& openFlag);
 
 void menuFile(EventManager& em, std::vector<Graph*>& graphs, std::string& current, std::string& imageFilename, bool& main, bool& panel,
-    bool& calc, bool& screen, int& frame, bool& saveAsFlag, bool& saveFlag, bool& openFlag);
+    bool& calc, bool& polarPanel, bool& screen, int& frame, bool& saveAsFlag, bool& saveFlag, bool& openFlag);

@@ -8,6 +8,7 @@
 #include "tinyexpr/tinyexpr.h"
 #include "thickLine.h"
 #include "eval.h"
+#include "LineShape.hpp"
 
 #define M_PI 3.14159265358979323846
 #define LOG(x) std::cout << (x) << std::endl;
@@ -28,6 +29,21 @@ Graph::Graph(const char* expr, const char* name, bool o, const sf::Color& pColor
     this->parseExpr();
     this->points = std::vector<sf::Vector2f>(Graph::numPoints);
     updatePoints();
+    polar = false;
+}
+
+Graph::Graph(const char* expr, const char* name, bool o, const sf::Color& pColor, const bool& polar) {
+    strcpy_s(this->expression, 45, expr);
+    this->name = name;
+    strcpy_s(this->checkName, 10, "on##");
+    strcat_s(this->checkName, 45, name);
+    this->on = o;
+    this->pointColor = pColor;
+    this->x_coor = 0;
+    this->polar = polar;
+    this->parseExpr();
+    this->points = std::vector<sf::Vector2f>(Graph::numPoints);
+    updatePoints();
 }
 
 Graph::Graph() {}
@@ -41,14 +57,16 @@ double Graph::findDistance(const sf::Vector2f& a, const sf::Vector2f& b) {
 }
 
 void Graph::draw(sf::RenderWindow& window) {
-    ThickLine tempLine(pointColor);
+    //ThickLine tempLine(pointColor);
 
     for (int i = 0; i < this->points.size() - 1; ++i) {
         if (std::isinf(points[i].x)) {
             continue;
         }
-        tempLine.setCoor(points[i], points[i + 1]);
-        tempLine.draw(window);
+        sf::LineShape tempLine(points[i], points[i + 1]);
+        tempLine.setFillColor(pointColor);
+        tempLine.setThickness(4.0f);
+        window.draw(tempLine);
     }
 }
 
@@ -67,14 +85,6 @@ void Graph::parseExpr() {
     te_variable vars[] = {
         {"x", &this->x_coor}
     };
-
-    //std::string temp = expression;
-
-    //for (int i = 1; i < temp.size(); i++) {
-    //	if ((isdigit(temp[i-1]) || temp[i-1] == 'x') && temp[i] == 'x') {
-    //		temp.insert(i, 1, '*');
-    //	}
-    //}
 
     this->evaluated = te_compile(clean(expression).c_str(), vars, 1, &this->parseError);
 }
@@ -100,35 +110,32 @@ void Graph::plot(int width, int rows, const sf::Vector2f origin) {
     sf::Vector2f position;
     int radius = 3;
 
-    for (int i = sfCurrentCenter.x - currentSize.x / 2; i < sfCurrentCenter.x + currentSize.x / 2; i += Graph::pointIncr) {
-        this->x_coor = i / gap;
+    float polar_x = 0;
+    float polarIncr = 6 * M_PI / Graph::numPoints;
 
-        double y = eval_expr() * gap;
-        if (std::isinf(y)) {
-            //std::cout << "inf" << std::endl;
-            this->points[idx] = sf::Vector2f(std::numeric_limits<float>::infinity(), 0.0f);
-            idx++;
-            continue;
+    for (int i = sfCurrentCenter.x - currentSize.x / 2; i < sfCurrentCenter.x + currentSize.x / 2; i += Graph::pointIncr) {
+        if (polar) {
+            this->x_coor = polar_x;
+            double y = eval_expr() * gap;
+            position.x = y * cos(x_coor);
+            position.y = y * sin(x_coor);
         }
-        position.x = i;
-        position.y = y;
+        else {
+            this->x_coor = i / gap;
+            double y = eval_expr() * gap;
+            if (std::isinf(y)) {
+                this->points[idx] = sf::Vector2f(std::numeric_limits<float>::infinity(), 0.0f);
+                idx++;
+                continue;
+            }
+            position.x = i;
+            position.y = y;
+        }
         if (idx < Graph::numPoints) {
             this->points[idx] = cartesianToSFML(position, origin);
             idx++;
         }
+        polar_x += polarIncr;
     }
-
-    //  for (int i = -numPoints / 2; i < numPoints / 2; i += 1) {
-    //      this->x_coor = i / gap;
-
-          //double y = eval_expr() * gap;
-          //if (y == NAN) {
-          //	continue;
-          //}
-          //position.x = i;
-          //position.y = y;
-    //      points[idx] = cartesianToSFML(position, origin);
-    //      idx++;
-    //  }
 }
 

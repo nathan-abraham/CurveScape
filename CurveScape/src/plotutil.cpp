@@ -302,13 +302,13 @@ void take_screenshot(const sf::RenderWindow& window, const std::string& filename
 }
 
 void mainMenuBar(EventManager& em, std::vector<Graph*>& graphs, std::string& current, std::string& imageFilename, bool& main, bool& panel,
-    bool& calc, bool& screen, int& frame, bool& saveAsFlag, bool& saveFlag, bool& openFlag)
+    bool& calc, bool& polarPanel, bool& screen, int& frame, bool& saveAsFlag, bool& saveFlag, bool& openFlag)
 {
     if (ImGui::BeginMainMenuBar())
     {
         if (ImGui::BeginMenu("File"))
         {
-            menuFile(em, graphs, current, imageFilename, main, panel, calc, screen, frame, saveAsFlag, saveFlag, openFlag);
+            menuFile(em, graphs, current, imageFilename, main, panel, calc, polarPanel, screen, frame, saveAsFlag, saveFlag, openFlag);
             ImGui::EndMenu();
         }
         if (ImGui::BeginMenu("Edit"))
@@ -328,11 +328,16 @@ void mainMenuBar(EventManager& em, std::vector<Graph*>& graphs, std::string& cur
         if (ImGui::BeginMenu("Panels")) {
             if (ImGui::MenuItem("Graphing Panel", NULL, panel)) {
                 panel = !panel;
+                polarPanel = false;
                 em.addEvent(new PanelToggledEvent(&panel));
             }
             if (ImGui::MenuItem("Calculation Panel", NULL, calc)) {
                 calc = !calc;
                 em.addEvent(new PanelToggledEvent(&calc));
+            }
+            if (ImGui::MenuItem("Polar Graphing Panel", NULL, polarPanel)) {
+                polarPanel = !polarPanel;
+                panel = false;
             }
             ImGui::EndMenu();
         }
@@ -341,7 +346,7 @@ void mainMenuBar(EventManager& em, std::vector<Graph*>& graphs, std::string& cur
 }
 
 void menuFile(EventManager& em, std::vector<Graph*>& graphs, std::string& current, std::string& imageFilename, bool& main, bool& panel,
-    bool& calc, bool& screen, int& frame, bool& saveAsFlag, bool& saveFlag, bool& openFlag)
+    bool& calc, bool& polarPanel, bool& screen, int& frame, bool& saveAsFlag, bool& saveFlag, bool& openFlag)
 {
     if (ImGui::MenuItem("Open", "Ctrl+O")) {
         nfdchar_t* rawFilename;
@@ -366,7 +371,7 @@ void menuFile(EventManager& em, std::vector<Graph*>& graphs, std::string& curren
             ImGui::MenuItem("Sailor");
             if (ImGui::BeginMenu("Recurse.."))
             {
-                menuFile(em, graphs, current, imageFilename, main, panel, calc, screen, frame, saveAsFlag, saveFlag, openFlag);
+                menuFile(em, graphs, current, imageFilename, main, panel, calc, polarPanel, screen, frame, saveAsFlag, saveFlag, openFlag);
                 ImGui::EndMenu();
             }
             ImGui::EndMenu();

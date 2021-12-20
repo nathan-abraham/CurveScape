@@ -150,7 +150,8 @@ int main(int argc, char *argv[])
     std::array<sf::Color, 6> graphColors = {atomRed, atomBlue, atomGreen, atomCyan, atomOrange, atomPurple};
     int colorIndex = 0;
 
-    std::vector<Graph *> graphs;
+    std::vector<Graph*> graphs;
+    std::vector<Graph*> polarGraphs;
 
     static int currentFuncIndex = 0;
     static int currentCalcIndex = 0;
@@ -159,6 +160,7 @@ int main(int argc, char *argv[])
     static bool mainActive = true;
     static bool panelActive = true;
     static bool calcActive = false;
+    static bool polarPanelActive = false;
     static bool imGuiFocused = false;
     static bool screenshotFlag = false;
 
@@ -198,6 +200,14 @@ int main(int argc, char *argv[])
     graphs.push_back(&y4);
     graphs.push_back(&y5);
     graphs.push_back(&y6);
+
+    Graph polar_y1("", "r1", false, graphColors[0], true);
+    Graph polar_y2("", "r2", false, graphColors[1], true);
+    Graph polar_y3("", "r3", false, graphColors[2], true);
+
+    polarGraphs.push_back(&polar_y1);
+    polarGraphs.push_back(&polar_y2);
+    polarGraphs.push_back(&polar_y3);
 
     static const char *options[] = {
         "nDeriv",
@@ -278,6 +288,9 @@ int main(int argc, char *argv[])
                     {
                         graph->updatePoints();
                     }
+                    for (Graph* graph : polarGraphs) {
+                        graph->updatePoints();
+                    }
                 }
                 else if (event.mouseWheelScroll.delta < 0 && Graph::scaleFactor * (1 - zoomIncrement) >= SCALE_MIN - zoomOffset)
                 {
@@ -285,6 +298,9 @@ int main(int argc, char *argv[])
                     //zoomViewAt({ event.mouseWheelScroll.x, event.mouseWheelScroll.y }, window, view, zoomAmount);
                     for (Graph *graph : graphs)
                     {
+                        graph->updatePoints();
+                    }
+                    for (Graph* graph : polarGraphs) {
                         graph->updatePoints();
                     }
                 }
@@ -298,6 +314,9 @@ int main(int argc, char *argv[])
                 {
                     graph->updatePoints();
                 }
+                for (Graph* graph : polarGraphs) {
+                    graph->updatePoints();
+                }
             }
             else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && !imGuiFocused)
             {
@@ -305,6 +324,9 @@ int main(int argc, char *argv[])
                     Graph::scaleFactor += zoomIncrement;
                 for (Graph *graph : graphs)
                 {
+                    graph->updatePoints();
+                }
+                for (Graph* graph : polarGraphs) {
                     graph->updatePoints();
                 }
             }
@@ -338,7 +360,7 @@ int main(int argc, char *argv[])
         if (mainActive)
         {
             mainMenuBar(eventManager, graphs, currentFileOpen, imageFilename, mainActive, panelActive,
-                        calcActive, screenshotFlag, frameDelay, saveAsFlag, saveFlag, openFlag);
+                        calcActive, polarPanelActive, screenshotFlag, frameDelay, saveAsFlag, saveFlag, openFlag);
         }
 
         if (panelActive)
@@ -360,13 +382,6 @@ int main(int argc, char *argv[])
             {
                 if (ImGui::InputText(graphs[i]->name, graphs[i]->expression, IM_ARRAYSIZE(graphs[i]->expression)))
                 {
-                    //if (!ImGui::IsKeyPressed(59) && !ImGui::IsKeyPressed(66)) {
-                    //    eventManager.addEvent(new TextEnteredEvent(graphs[i]->expression));
-                    //    LOG("added event")
-                    //}
-                    //else {
-                    //eventManager.addEvent(new TextDeletedEvent(graphs[i]->expression, eventManager.undo.top()->lastChar));
-                    //}
                     graphs[i]->parseExpr();
                     graphs[i]->updatePoints();
                 }
@@ -380,6 +395,43 @@ int main(int argc, char *argv[])
                 if (ImGui::Checkbox(graphs[i]->checkName, &graphs[i]->on))
                 {
                     eventManager.addEvent(new GraphToggledEvent(&graphs[i]->on));
+                }
+            }
+
+            ImGui::PopFont();
+            ImGui::End(); // end window
+        }
+
+        if (polarPanelActive) {
+            ImGui::Begin("Polar Graphing Panel", &polarPanelActive, ImGuiWindowFlags_MenuBar); // begin window
+
+            ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[0]);
+
+            if (ImGui::SliderFloat("Zoom", &Graph::scaleFactor, SCALE_MIN, SCALE_MAX))
+            {
+                for (Graph* graph : polarGraphs)
+                {
+                    graph->updatePoints();
+                }
+            }
+
+            for (int i = 0; i < polarGraphs.size(); ++i)
+            {
+                if (ImGui::InputText(polarGraphs[i]->name, polarGraphs[i]->expression, IM_ARRAYSIZE(polarGraphs[i]->expression)))
+                {
+                    polarGraphs[i]->parseExpr();
+                    polarGraphs[i]->updatePoints();
+                }
+                ImGui::SameLine(0, 20);
+
+                if (i < graphColors.size())
+                {
+                    sf::Color &current = graphColors[i];
+                    colors[ImGuiCol_CheckMark] = ImVec4(current.r / 255.0f, current.g / 255.0f, current.b / 255.0f, 1.0f);
+                }
+                if (ImGui::Checkbox(polarGraphs[i]->checkName, &polarGraphs[i]->on))
+                {
+                    eventManager.addEvent(new GraphToggledEvent(&polarGraphs[i]->on));
                 }
             }
 
@@ -570,6 +622,10 @@ int main(int argc, char *argv[])
         {
             if (graphs[i]->on)
                 graphs[i]->draw(window);
+        }
+        for (int i = 0; i < polarGraphs.size(); ++i) {
+            if (polarGraphs[i]->on)
+                polarGraphs[i]->draw(window);
         }
 
         ImGui::SFML::Render(window);

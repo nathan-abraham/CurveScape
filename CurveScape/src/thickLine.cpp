@@ -38,7 +38,13 @@ void ThickLine::setCoor(const sf::Vector2f& a, const sf::Vector2f& b) {
 
 void ThickLine::calc() {
     const float thickness = 4;
-    float angle = rtd(atan((p2.y - p1.y) / (p2.x - p1.x)));
+    float angle;
+    if (p2.x - p1.x == 0) {
+        angle = 90;
+    }
+    else {
+        angle = rtd(atan((p2.y - p1.y) / (p2.x - p1.x)));
+    }
     line.setRotation(0);
     line.rotate(angle);
     //if (p2.y <= p1.y)
