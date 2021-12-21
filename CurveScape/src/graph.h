@@ -29,6 +29,7 @@ public:
     void plot(int width, int rows, sf::Vector2f origin);
     void updatePoints();
     void parseExpr();
+    bool shouldGraph();
     char expression[50];
     const char* name;
     char checkName[60];

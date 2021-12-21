@@ -1,12 +1,12 @@
 #include <ctype.h>
 #include <iostream>
 #include <string.h>
+#include <imgui.h>
 
 #include "graph.h"
 #include "constants.h"
 #include "plotutil.h"
 #include "tinyexpr/tinyexpr.h"
-#include "thickLine.h"
 #include "eval.h"
 #include "LineShape.hpp"
 
@@ -67,18 +67,25 @@ void Graph::draw(sf::RenderWindow& window) {
         tempLine.setFillColor(pointColor);
         tempLine.setThickness(4.0f);
         window.draw(tempLine);
+
+        if (tempLine.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window)))) {
+            sf::Vector2f temp(SFMLToCartesian(points[i], origin));
+            std::string toolTip = std::to_string(temp.x / Graph::scaleFactor / (winWidth / ROWS)) + std::string(", ") +
+                std::to_string(temp.y / Graph::scaleFactor / (winWidth / ROWS));
+            ImGui::SetTooltip(toolTip.c_str());
+        }
     }
 }
 
 void Graph::updatePoints() {
     this->points.resize(Graph::numPoints);
     if (this->evaluated) {
-        this->on = true;
         plot(winWidth, ROWS, origin);
     }
-    else {
-        this->on = false;
-    }
+}
+
+bool Graph::shouldGraph() {
+    return this->on && this->evaluated;
 }
 
 void Graph::parseExpr() {
@@ -111,7 +118,8 @@ void Graph::plot(int width, int rows, const sf::Vector2f origin) {
     int radius = 3;
 
     float polar_x = 0;
-    float polarIncr = 6 * M_PI / Graph::numPoints;
+    float maxTheta = 6 * M_PI;
+    float polarIncr = maxTheta / Graph::numPoints;
 
     for (int i = sfCurrentCenter.x - currentSize.x / 2; i < sfCurrentCenter.x + currentSize.x / 2; i += Graph::pointIncr) {
         if (polar) {

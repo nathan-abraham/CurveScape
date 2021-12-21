@@ -19,10 +19,8 @@
 #include "graph.h"
 #include "constants.h"
 #include "plotutil.h"
-#include "thickLine.h"
 #include "fileOperations.h"
 
-// Temp includes, remove later
 #include "eval.h"
 
 #include "events/eventManager.h"
@@ -33,12 +31,14 @@
 
 int main(int argc, char *argv[])
 {
-    //std::cout << sf::VideoMode::getDesktopMode().width << ", " << sf::VideoMode::getDesktopMode().height << std::endl;
+#ifdef _DEBUG
+    std::cout << sf::VideoMode::getDesktopMode().width << ", " << sf::VideoMode::getDesktopMode().height << std::endl;
     std::cout << argc << " arguments" << std::endl;
     for (int i = 0; i < argc; ++i)
     {
         std::cout << "[" << argv[i] << "]" << std::endl;
     }
+#endif
 
     Graph::pointIncr = 1;
     Graph::numPoints = winWidth / Graph::pointIncr;
@@ -58,14 +58,10 @@ int main(int argc, char *argv[])
     Graph::window = &window;
 
     sf::Font font;
-    //if (!font.loadFromFile("assets/OpenSans-Regular.ttf")) {
-    //    LOG("Could not load font")
-    //    return 2;
-    //}
 
     std::string currentPath = argv[0];
     currentPath = currentPath.substr(0, currentPath.size() - std::string("CurveScape.exe").size());
-    if (!font.loadFromFile(currentPath + std::string("assets\\OpenSans-Regular.ttf")))
+    if (!font.loadFromFile(currentPath + std::string("assets\\OpenSans-Bold.ttf")))
     {
         LOG("Could not load font")
         return 2;
@@ -73,9 +69,6 @@ int main(int argc, char *argv[])
 
     ImGuiIO &IO = ImGui::GetIO();
 
-    //if (exists("assets/OpenSans-Bold.ttf")) {
-    //    IO.Fonts->AddFontFromFileTTF("assets/OpenSans-Bold.ttf", 18);
-    //}
     if (exists(currentPath + std::string("assets\\OpenSans-Bold.ttf")))
     {
         IO.Fonts->AddFontFromFileTTF(std::string(currentPath + std::string("assets\\OpenSans-Bold.ttf")).c_str(), 18);
@@ -84,7 +77,6 @@ int main(int argc, char *argv[])
     IO.Fonts->AddFontDefault();
     ImGui::SFML::UpdateFontTexture();
 
-    //const char* iniFilename = std::string(currentPath + std::string("imgui.ini")).c_str();
     char iniFilename[150];
     strcpy_s(iniFilename, 149, std::string(currentPath + std::string("imgui.ini")).c_str());
 
@@ -201,9 +193,9 @@ int main(int argc, char *argv[])
     graphs.push_back(&y5);
     graphs.push_back(&y6);
 
-    Graph polar_y1("", "r1", false, graphColors[0], true);
-    Graph polar_y2("", "r2", false, graphColors[1], true);
-    Graph polar_y3("", "r3", false, graphColors[2], true);
+    Graph polar_y1("", "r1", true, graphColors[0], true);
+    Graph polar_y2("", "r2", true, graphColors[1], true);
+    Graph polar_y3("", "r3", true, graphColors[2], true);
 
     polarGraphs.push_back(&polar_y1);
     polarGraphs.push_back(&polar_y2);
@@ -225,7 +217,7 @@ int main(int argc, char *argv[])
     while (window.isOpen())
     {
         sf::Event event;
-        while (window.pollEvent(event))
+        if (window.waitEvent(event))
         {
             ImGui::SFML::ProcessEvent(event);
 
@@ -349,6 +341,9 @@ int main(int argc, char *argv[])
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
         {
             //std::cout << "Left mouse button pressed" << std::endl;
+            for (Graph* graph : graphs) {
+                graph->updatePoints();
+            }
         }
 
         ImGui::SFML::Update(window, deltaClock.restart());
@@ -617,14 +612,14 @@ int main(int argc, char *argv[])
         }
 
         window.clear(bgColor);
-        drawGrid2(window, winWidth, winHeight, ROWS, lineColor, Graph::scaleFactor, font, bgColor);
+        drawGrid3(window, winWidth, winHeight, ROWS, lineColor, Graph::scaleFactor, font, bgColor);
         for (int i = 0; i < graphs.size(); ++i)
         {
-            if (graphs[i]->on)
+            if (graphs[i]->shouldGraph())
                 graphs[i]->draw(window);
         }
         for (int i = 0; i < polarGraphs.size(); ++i) {
-            if (polarGraphs[i]->on)
+            if (polarGraphs[i]->shouldGraph())
                 polarGraphs[i]->draw(window);
         }
 

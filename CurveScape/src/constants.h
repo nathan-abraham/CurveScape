@@ -5,7 +5,7 @@ extern int winHeight;
 extern const int ROWS;
 extern const int gap;
 
-const float SCALE_MIN = 0.5f;
+const float SCALE_MIN = 0.05f;
 const float SCALE_MAX = 100.0f;
 
 const sf::Vector2f origin(winWidth / 2, winHeight / 2);

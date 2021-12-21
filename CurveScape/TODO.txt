@@ -1,5 +1,3 @@
-- Update grid system
-- Max min calculations
 - Add nDeriv function
 - Parametric Graphing
 - Refactor main.cpp

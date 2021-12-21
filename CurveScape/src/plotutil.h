@@ -9,10 +9,10 @@ sf::Vector2f multVec2(sf::Vector2f original, float scale);
 
 std::vector<sf::CircleShape> plot(int width, int height, int rows, sf::Vector2f origin, int numPoints, sf::Color pointColor, double(*function)(double), double scaleFactor);
 
-void drawGrid(sf::RenderWindow& window, const int& width, const int& height, const int& rows, const sf::Color& lineColor, const float& scaleFactor,
+void drawGrid2(sf::RenderWindow& window, const int& width, const int& height, const int& rows, const sf::Color& lineColor, const float& scaleFactor,
     const sf::Font& font, const sf::Color& bgColor);
 
-void drawGrid2(sf::RenderWindow& window, const int& width, const int& height, const int& rows, const sf::Color& lineColor, const float& scaleFactor,
+void drawGrid3(sf::RenderWindow& window, const int& width, const int& height, const int& rows, const sf::Color& lineColor, const float& scaleFactor,
     const sf::Font& font, const sf::Color& bgColor);
 
 void zoomViewAt(const sf::Vector2i& pixel, sf::RenderWindow& window, sf::View& view, float& scalef, const float& incr);
