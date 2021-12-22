@@ -2,11 +2,11 @@
 
 class App {
 private:
-    bool urMom;
+    int argc;
+    char** argv;
 
 public:
-    App();
+    App(int, char*[]);
 
     void run();
-    void init();
 };

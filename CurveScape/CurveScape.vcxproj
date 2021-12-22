@@ -182,6 +182,8 @@
     <ClCompile Include="src\events\panelToggledEvent.cpp" />
     <ClCompile Include="src\fileOperations.cpp" />
     <ClCompile Include="src\graph.cpp" />
+    <ClCompile Include="src\graphicsManager.cpp" />
+    <ClCompile Include="src\graphManager.cpp" />
     <ClCompile Include="src\imgui\imgui-SFML.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
@@ -199,13 +201,9 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="src\LineShape.cpp" />
-    <ClCompile Include="src\main.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
-    </ClCompile>
+    <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\plotutil.cpp" />
+    <ClCompile Include="src\stateManager.cpp" />
     <ClCompile Include="src\tinyexpr\tinyexpr.c" />
     <ClCompile Include="src\events\userEvent.cpp" />
   </ItemGroup>
@@ -220,8 +218,11 @@
     <ClInclude Include="src\events\panelToggledEvent.h" />
     <ClInclude Include="src\fileOperations.h" />
     <ClInclude Include="src\graph.h" />
+    <ClInclude Include="src\graphicsManager.h" />
+    <ClInclude Include="src\graphManager.h" />
     <ClInclude Include="src\LineShape.hpp" />
     <ClInclude Include="src\plotutil.h" />
+    <ClInclude Include="src\stateManager.h" />
     <ClInclude Include="src\tinyexpr\tinyexpr.h" />
     <ClInclude Include="src\events\userEvent.h" />
   </ItemGroup>
