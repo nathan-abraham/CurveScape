@@ -11,22 +11,26 @@ namespace sf
 	{
 		public :
 
-		explicit LineShape(const Vector2f& point1, const Vector2f& point2);
+			LineShape();
 
-		void setThickness(float thickness);
+            void init(const Vector2f& point1, const Vector2f& point2);
 
-		float getThickness() const;
+			explicit LineShape(const Vector2f& point1, const Vector2f& point2);
 
-		float getLength() const;
+            void setThickness(float thickness);
 
-		virtual unsigned int getPointCount() const;
+            float getThickness() const;
 
-		virtual Vector2f getPoint(unsigned int index) const;
+            float getLength() const;
+
+            virtual unsigned int getPointCount() const;
+
+            virtual Vector2f getPoint(unsigned int index) const;
 
 		private :
 
-    Vector2f m_direction; ///< Direction of the line
-    float m_thickness;    ///< Thickness of the line
+            Vector2f m_direction; ///< Direction of the line
+            float m_thickness;    ///< Thickness of the line
 };
 
 } // namespace sf

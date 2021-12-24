@@ -11,9 +11,20 @@
 #include "fileOperations.h"
 #include "events/eventManager.h"
 #include "events/panelToggledEvent.h"
+#include "stateManager.h"
 #include "plotutil.h"
+#include "LineShape.hpp"
 
 #define LOG(x) std::cout << (x) << std::endl;
+#define M_PI 3.14159265358979323846
+
+float rtd(float r) {
+    return r * 180 / M_PI;
+}
+
+float dtr(float r) {
+    return r * M_PI / 180;
+}
 
 sf::Vector2f cartesianToSFML(const sf::Vector2f& original, const sf::Vector2f& origin) {
     sf::Vector2f temp(original.x + origin.x, origin.y - original.y);
@@ -29,131 +40,6 @@ sf::Vector2f multVec2(sf::Vector2f original, float scale) {
     original.x *= scale;
     original.y *= scale;
     return original;
-}
-
-std::vector<sf::CircleShape> plot(int width, int height, int rows, const sf::Vector2f origin, int numPoints, sf::Color pointColor, double(*function)(double), double scaleFactor) {
-    double gap = width / rows * scaleFactor;
-    std::vector<sf::CircleShape> points(numPoints);
-    int idx = 0;
-    for (int i = -numPoints / 2; i < numPoints / 2; i++) {
-        int radius = 3;
-        double x = i / gap;
-        sf::CircleShape point(5, 4);
-        sf::Vector2f position(i - radius, function(x) * gap + radius);
-        point.setPosition(cartesianToSFML(position, origin));
-        point.setFillColor(pointColor);
-        points[idx] = point;
-        idx++;
-    }
-    return points;
-}
-
-void drawGrid2(sf::RenderWindow& window, const int& width, const int& height, const int& rows, const sf::Color& lineColor, const float& scaleFactor,
-    const sf::Font& font, const sf::Color& bgColor) {
-
-    const int gap = width / rows;
-    float benchmark = scaleFactor / 3;
-
-    sf::Vector2f sfCurrentCenter = SFMLToCartesian(window.getView().getCenter(), origin);
-    sf::Vector2f sfCurrentSize = SFMLToCartesian(window.getView().getSize(), origin);
-
-    sf::Vector2f currentCenter = window.getView().getCenter();
-    sf::Vector2f currentSize = window.getView().getSize();
-
-    sf::RectangleShape thickLine(sf::Vector2f(currentSize.x, height / 160));
-    thickLine.setPosition(currentCenter.x - currentSize.x / 2, height / 2 - height / 320);
-    thickLine.setFillColor(lineColor);
-    window.draw(thickLine);
-
-    thickLine = sf::RectangleShape(sf::Vector2f(width / 160, currentSize.y));
-    thickLine.setPosition(width / 2 - width / 320, currentCenter.y - currentSize.y / 2);
-    thickLine.setFillColor(lineColor);
-    window.draw(thickLine);
-
-    sf::Text text;
-    text.setFont(font);
-    text.setCharacterSize(12);
-    text.setFillColor(lineColor);
-
-    text.setString("0");
-    text.setPosition(cartesianToSFML(sf::Vector2f(-15, -3), origin));
-    window.draw(text);
-
-    for (int i = 0; i < (sfCurrentCenter.x + sfCurrentSize.x) / scaleFactor; i += gap) {
-        sf::Vertex line[] = {
-            sf::Vertex(cartesianToSFML(sf::Vector2f(i * scaleFactor, sfCurrentCenter.y - sfCurrentSize.y), origin), lineColor),
-            sf::Vertex(cartesianToSFML(sf::Vector2f(i * scaleFactor, sfCurrentCenter.y + sfCurrentSize.y), origin), lineColor),
-        };
-        window.draw(line, 2, sf::Lines);
-        if (i != 0) {
-            text.setString(std::to_string(i / gap));
-            sf::FloatRect textRect = text.getGlobalBounds();
-            text.setPosition(cartesianToSFML(sf::Vector2f(i * scaleFactor - textRect.width / 2.0f, -3), origin));
-            sf::RectangleShape back(sf::Vector2f(textRect.width, textRect.height + 5));
-            back.setPosition(text.getPosition());
-            back.setFillColor(bgColor);
-
-            window.draw(back);
-            window.draw(text);
-        }
-    }
-
-    for (int i = 0; i > (sfCurrentCenter.x - sfCurrentSize.x) / scaleFactor; i -= gap) {
-        sf::Vertex line[] = {
-            sf::Vertex(cartesianToSFML(sf::Vector2f(i * scaleFactor, sfCurrentCenter.y - sfCurrentSize.y), origin), lineColor),
-            sf::Vertex(cartesianToSFML(sf::Vector2f(i * scaleFactor, sfCurrentCenter.y + sfCurrentSize.y), origin), lineColor),
-        };
-        window.draw(line, 2, sf::Lines);
-        if (i != 0) {
-            text.setString(std::to_string(i / gap));
-            sf::FloatRect textRect = text.getGlobalBounds();
-            text.setPosition(cartesianToSFML(sf::Vector2f(i * scaleFactor - textRect.width / 2.0f, -3), origin));
-            sf::RectangleShape back(sf::Vector2f(textRect.width, textRect.height + 5));
-            back.setPosition(text.getPosition());
-            back.setFillColor(bgColor);
-
-            window.draw(back);
-            window.draw(text);
-        }
-    }
-
-    for (int i = 0; i < (sfCurrentCenter.y - sfCurrentSize.y) / scaleFactor; i += gap) {
-        sf::Vertex line[] = {
-            sf::Vertex(cartesianToSFML(sf::Vector2f(sfCurrentCenter.x + sfCurrentSize.x, i * scaleFactor), origin), lineColor),
-            sf::Vertex(cartesianToSFML(sf::Vector2f(sfCurrentCenter.x - sfCurrentSize.x, i * scaleFactor), origin), lineColor),
-        };
-        window.draw(line, 2, sf::Lines);
-        if (i != 0) {
-            text.setString(std::to_string(i / gap));
-            sf::FloatRect textRect = text.getGlobalBounds();
-            text.setPosition(cartesianToSFML(sf::Vector2f(-textRect.width - 6, i * scaleFactor + textRect.height / 1.25f), origin));
-            sf::RectangleShape back(sf::Vector2f(textRect.width, textRect.height + 5));
-            back.setPosition(text.getPosition());
-            back.setFillColor(bgColor);
-
-            window.draw(back);
-            window.draw(text);
-        }
-    }
-
-    for (int i = 0; i > (sfCurrentCenter.y + sfCurrentSize.y) / scaleFactor; i -= gap) {
-        sf::Vertex line[] = {
-            sf::Vertex(cartesianToSFML(sf::Vector2f(sfCurrentCenter.x + sfCurrentSize.x, i * scaleFactor), origin), lineColor),
-            sf::Vertex(cartesianToSFML(sf::Vector2f(sfCurrentCenter.x - sfCurrentSize.x, i * scaleFactor), origin), lineColor),
-        };
-        window.draw(line, 2, sf::Lines);
-        if (i != 0) {
-            text.setString(std::to_string(i / gap));
-            sf::FloatRect textRect = text.getGlobalBounds();
-            text.setPosition(cartesianToSFML(sf::Vector2f(-textRect.width - 6, i * scaleFactor + textRect.height / 1.25f), origin));
-            sf::RectangleShape back(sf::Vector2f(textRect.width, textRect.height + 5));
-            back.setPosition(text.getPosition());
-            back.setFillColor(bgColor);
-
-            window.draw(back);
-            window.draw(text);
-        }
-    }
 }
 
 class GridLine {
@@ -535,7 +421,7 @@ void drawVertical(sf::RenderWindow& window, const float& endVal, const int& widt
     }
 }
 
-void drawGrid3(sf::RenderWindow& window, const int& width, const int& height, const int& rows, const sf::Color& lineColor, const float& scaleFactor,
+void drawGrid(sf::RenderWindow& window, const int& width, const int& height, const int& rows, const sf::Color& lineColor, const float& scaleFactor,
     const sf::Font& font, const sf::Color& bgColor) {
 
     const int gap = width / rows;
@@ -575,6 +461,99 @@ void drawGrid3(sf::RenderWindow& window, const int& width, const int& height, co
 
     drawVertical(window, (sfCurrentCenter.y + sfCurrentSize.y) / scaleFactor, width, scaleFactor, sfCurrentCenter, sfCurrentSize,
         lineColor, font, false);
+}
+
+void drawPolarGrid(sf::RenderWindow& window, const int& width, const int& height, const int& rows, const sf::Color& lineColor, const float& scaleFactor,
+    const sf::Font& font, const sf::Color& bgColor) {
+
+    const int gap = width / rows;
+
+    sf::Vector2f sfCurrentCenter = SFMLToCartesian(window.getView().getCenter(), origin);
+    sf::Vector2f sfCurrentSize = SFMLToCartesian(window.getView().getSize(), origin);
+
+    sf::Vector2f currentCenter = window.getView().getCenter();
+    sf::Vector2f currentSize = window.getView().getSize();
+
+    sf::RectangleShape thickLine(sf::Vector2f(currentSize.x, height / 160));
+    thickLine.setPosition(currentCenter.x - currentSize.x / 2, height / 2 - height / 320);
+    thickLine.setFillColor(lineColor);
+    window.draw(thickLine);
+
+    thickLine = sf::RectangleShape(sf::Vector2f(width / 160, currentSize.y));
+    thickLine.setPosition(width / 2 - width / 320, currentCenter.y - currentSize.y / 2);
+    thickLine.setFillColor(lineColor);
+    window.draw(thickLine);
+
+    sf::Text text;
+    text.setFont(font);
+    text.setCharacterSize(12);
+    text.setFillColor(lineColor);
+
+    text.setString("0");
+    text.setPosition(cartesianToSFML(sf::Vector2f(-15, -3), origin));
+    window.draw(text);
+
+    double incr = gap;
+    double offset = wonkyRound(scaleFactor);
+    incr = (float) gap / offset;
+
+    constexpr float lineThickness = 2;
+    sf::CircleShape tempCircle;
+    tempCircle.setOutlineThickness(lineThickness);
+    tempCircle.setOutlineColor(lineColor);
+    tempCircle.setFillColor(sf::Color(0, 0, 0, 0));
+    tempCircle.setPointCount(100);
+
+    float endVal = std::max((sfCurrentCenter.x + sfCurrentSize.x) / scaleFactor, abs((sfCurrentCenter.x - sfCurrentSize.x) / scaleFactor));
+    endVal = std::max(endVal, abs((sfCurrentCenter.y - sfCurrentSize.y) / scaleFactor));
+    endVal = 2 * std::max(endVal, abs((sfCurrentCenter.y + sfCurrentSize.y) / scaleFactor));
+
+    for (float i = 0; i < endVal; i += incr) {
+        float quant = i * scaleFactor;
+
+        float radius = i * scaleFactor - lineThickness / 2;
+        tempCircle.setRadius(radius);
+        tempCircle.setPosition(sf::Vector2f(origin.x - radius, origin.y - radius));
+        window.draw(tempCircle);
+
+        if (i != 0) {
+            float labelNum = roundDecimal((float)i / gap, countDigits(offset));
+            if (labelNum - floor(labelNum) < 0.001) {
+                text.setString(std::to_string((int)labelNum));
+            }
+            else {
+                std::stringstream format;
+                format << std::fixed << std::setprecision(countDigits(offset)) << labelNum;
+                text.setString(format.str());
+            }
+            sf::FloatRect textRect = text.getGlobalBounds();
+            text.setPosition(cartesianToSFML(sf::Vector2f(i * scaleFactor - textRect.width / 2.0f, -3), origin));
+            sf::RectangleShape back(sf::Vector2f(textRect.width, textRect.height + 5));
+            back.setPosition(text.getPosition());
+            back.setFillColor(bgColor);
+
+            window.draw(back);
+            window.draw(text);
+        }
+    }
+
+    std::vector<std::array<sf::Vertex, 2>> diagLines;
+    std::array<float, 8> degrees = { 30, 60, 120, 150, 210, 240, 300, 330 };
+
+    float rightDist = (sfCurrentCenter.x + sfCurrentSize.x) / scaleFactor;
+    float leftDist = (sfCurrentCenter.x - sfCurrentSize.x) / scaleFactor;
+    float upDist = (sfCurrentCenter.y + sfCurrentSize.y) / scaleFactor;
+    float downDist = (sfCurrentCenter.y - sfCurrentSize.y) / scaleFactor;
+
+    for (float degree : degrees) {
+        sf::LineShape line(
+            cartesianToSFML(sf::Vector2f(rightDist * scaleFactor, scaleFactor * rightDist * tan(dtr(degree))), origin),
+            cartesianToSFML(sf::Vector2f(leftDist * scaleFactor, scaleFactor * leftDist * tan(dtr(degree))), origin)
+        );
+        line.setThickness(lineThickness);
+        line.setFillColor(lineColor);
+        window.draw(line);
+    }
 }
 
 void zoomViewAt(const sf::Vector2i& pixel, sf::RenderWindow& window, sf::View& view, float& scalef, const float& incr)
@@ -658,6 +637,49 @@ void mainMenuBar(EventManager& em, std::vector<Graph*>& graphs, std::string& cur
     }
 }
 
+void mainMenuBar(EventManager& em, std::vector<Graph*>& graphs, StateManager& sm)
+{
+    if (ImGui::BeginMainMenuBar())
+    {
+        if (ImGui::BeginMenu("File"))
+        {
+            menuFile(em, graphs, sm);
+            ImGui::EndMenu();
+        }
+        if (ImGui::BeginMenu("Edit"))
+        {
+            if (ImGui::MenuItem("Undo", "CTRL+Z", false, !em.undo.empty())) {
+                em.undo_event();
+            }
+            if (ImGui::MenuItem("Redo", "CTRL+Y", false, !em.redo.empty())) {
+                em.redo_event();
+            }
+            ImGui::Separator();
+            if (ImGui::MenuItem("Cut", "CTRL+X")) {}
+            if (ImGui::MenuItem("Copy", "CTRL+C")) {}
+            if (ImGui::MenuItem("Paste", "CTRL+V")) {}
+            ImGui::EndMenu();
+        }
+        if (ImGui::BeginMenu("Panels")) {
+            if (ImGui::MenuItem("Graphing Panel", NULL, sm.panelActive)) {
+                sm.panelActive = !sm.panelActive;
+                sm.polarPanelActive = false;
+                em.addEvent(new PanelToggledEvent(&sm.panelActive));
+            }
+            if (ImGui::MenuItem("Calculation Panel", NULL, sm.calcActive)) {
+                sm.calcActive = !sm.calcActive;
+                em.addEvent(new PanelToggledEvent(&sm.calcActive));
+            }
+            if (ImGui::MenuItem("Polar Graphing Panel", NULL, sm.polarPanelActive)) {
+                sm.polarPanelActive = !sm.polarPanelActive;
+                sm.panelActive = false;
+            }
+            ImGui::EndMenu();
+        }
+        ImGui::EndMainMenuBar();
+    }
+}
+
 void menuFile(EventManager& em, std::vector<Graph*>& graphs, std::string& current, std::string& imageFilename, bool& main, bool& panel,
     bool& calc, bool& polarPanel, bool& screen, int& frame, bool& saveAsFlag, bool& saveFlag, bool& openFlag)
 {
@@ -727,6 +749,134 @@ void menuFile(EventManager& em, std::vector<Graph*>& graphs, std::string& curren
         }
         else if (result == NFD_CANCEL) {
             saveAsFlag = false;
+            LOG("canceled saving")
+        }
+        else {
+            LOG(NFD_GetError());
+        }
+
+    }
+
+    ImGui::Separator();
+    if (ImGui::BeginMenu("Options"))
+    {
+        static bool enabled = true;
+        ImGui::MenuItem("Enabled", "", &enabled);
+        ImGui::BeginChild("child", ImVec2(0, 60), true);
+        for (int i = 0; i < 10; i++)
+            ImGui::Text("Scrolling Text %d", i);
+        ImGui::EndChild();
+        static float f = 0.5f;
+        static int n = 0;
+        ImGui::SliderFloat("Value", &f, 0.0f, 1.0f);
+        ImGui::InputFloat("Input", &f, 0.1f);
+        ImGui::Combo("Combo", &n, "Yes\0No\0Maybe\0\0");
+        ImGui::EndMenu();
+    }
+
+    if (ImGui::BeginMenu("Colors"))
+    {
+        float sz = ImGui::GetTextLineHeight();
+        for (int i = 0; i < ImGuiCol_COUNT; i++)
+        {
+            const char* name = ImGui::GetStyleColorName((ImGuiCol)i);
+            ImVec2 p = ImGui::GetCursorScreenPos();
+            ImGui::GetWindowDrawList()->AddRectFilled(p, ImVec2(p.x + sz, p.y + sz), ImGui::GetColorU32((ImGuiCol)i));
+            ImGui::Dummy(ImVec2(sz, sz));
+            ImGui::SameLine();
+            ImGui::MenuItem(name);
+        }
+        ImGui::EndMenu();
+    }
+
+    // Here we demonstrate appending again to the "Options" menu (which we already created above)
+    // Of course in this demo it is a little bit silly that this function calls BeginMenu("Options") twice.
+    // In a real code-base using it would make senses to use this feature from very different code locations.
+    if (ImGui::BeginMenu("Options")) // <-- Append!
+    {
+        static bool b = true;
+        ImGui::Checkbox("SomeOption", &b);
+        ImGui::EndMenu();
+    }
+
+    if (ImGui::BeginMenu("Disabled", false)) // Disabled
+    {
+        IM_ASSERT(0);
+    }
+    if (ImGui::MenuItem("Checked", NULL, true)) {}
+    if (ImGui::MenuItem("Quit", "Alt+F4")) {
+        exit(EXIT_SUCCESS);
+    }
+}
+
+void menuFile(EventManager& em, std::vector<Graph*>& graphs, StateManager& sm)
+{
+    if (ImGui::MenuItem("Open", "Ctrl+O")) {
+        nfdchar_t* rawFilename;
+        nfdresult_t result = NFD_OpenDialog("graph", NULL, &rawFilename);
+
+        if (result == NFD_OKAY) {
+            loadGraphs(graphs, rawFilename);
+            sm.currentFileOpen = rawFilename;
+        }
+        else {
+            LOG(NFD_GetError());
+        }
+    }
+    if (ImGui::BeginMenu("Open Recent"))
+    {
+        ImGui::MenuItem("fish_hat.c");
+        ImGui::MenuItem("fish_hat.inl");
+        ImGui::MenuItem("fish_hat.h");
+        if (ImGui::BeginMenu("More.."))
+        {
+            ImGui::MenuItem("Hello");
+            ImGui::MenuItem("Sailor");
+            if (ImGui::BeginMenu("Recurse.."))
+            {
+                menuFile(em, graphs, sm);
+                ImGui::EndMenu();
+            }
+            ImGui::EndMenu();
+        }
+        ImGui::EndMenu();
+    }
+    if (ImGui::MenuItem("Save", "Ctrl+S")) {
+        if (sm.currentFileOpen == "" || sm.currentFileOpen.find(".png") != std::string::npos
+            || sm.currentFileOpen.find(".jpg") != std::string::npos) {
+            sm.saveAsFlag = true;
+        }
+        else {
+            sm.saveAsFlag = false;
+            saveGraphs(graphs, sm.currentFileOpen.c_str());
+        }
+    }
+    if (ImGui::MenuItem("Save As...") || sm.saveAsFlag) {
+        nfdchar_t* rawFilename;
+        nfdresult_t result = NFD_SaveDialog("png;jpg;graph", NULL, &rawFilename);
+
+        if (result == NFD_OKAY) {
+            sm.currentFileOpen = rawFilename;
+            if (sm.currentFileOpen.find(".graph") != std::string::npos) {
+                saveGraphs(graphs, rawFilename);
+            }
+            else {
+                sm.imageFilename = rawFilename;
+
+                if (sm.imageFilename.substr(sm.imageFilename.size() - 4).find(".") == std::string::npos) {
+                    LOG("added extension")
+                    sm.imageFilename += ".png";
+                }
+                sm.mainActive = false;
+                sm.panelActive = false;
+                sm.calcActive = false;
+                sm.screenshotFlag = true;
+                sm.frameDelay = 0;
+            }
+            sm.saveAsFlag = false;
+        }
+        else if (result == NFD_CANCEL) {
+            sm.saveAsFlag = false;
             LOG("canceled saving")
         }
         else {

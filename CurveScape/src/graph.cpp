@@ -57,23 +57,22 @@ double Graph::findDistance(const sf::Vector2f& a, const sf::Vector2f& b) {
 }
 
 void Graph::draw(sf::RenderWindow& window) {
-    //ThickLine tempLine(pointColor);
-
+    sf::LineShape tempLine;
+    tempLine.setFillColor(pointColor);
+    tempLine.setThickness(4.0f);
     for (int i = 0; i < this->points.size() - 1; ++i) {
         if (std::isinf(points[i].x)) {
             continue;
         }
-        sf::LineShape tempLine(points[i], points[i + 1]);
-        tempLine.setFillColor(pointColor);
-        tempLine.setThickness(4.0f);
+        tempLine.init(points[i], points[i + 1]);
         window.draw(tempLine);
 
-        if (tempLine.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window)))) {
-            sf::Vector2f temp(SFMLToCartesian(points[i], origin));
-            std::string toolTip = std::to_string(temp.x / Graph::scaleFactor / (winWidth / ROWS)) + std::string(", ") +
-                std::to_string(temp.y / Graph::scaleFactor / (winWidth / ROWS));
-            ImGui::SetTooltip(toolTip.c_str());
-        }
+        //if (tempLine.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window)))) {
+        //    sf::Vector2f temp(SFMLToCartesian(points[i], origin));
+        //    std::string toolTip = std::to_string(temp.x / Graph::scaleFactor / (winWidth / ROWS)) + std::string(", ") +
+        //        std::to_string(temp.y / Graph::scaleFactor / (winWidth / ROWS));
+        //    ImGui::SetTooltip(toolTip.c_str());
+        //}
     }
 }
 

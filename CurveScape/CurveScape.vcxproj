@@ -201,7 +201,8 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="src\LineShape.cpp" />
-    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\original.cpp" />
+    <ClCompile Include="src\parametricGraph.cpp" />
     <ClCompile Include="src\plotutil.cpp" />
     <ClCompile Include="src\stateManager.cpp" />
     <ClCompile Include="src\tinyexpr\tinyexpr.c" />
@@ -221,6 +222,7 @@
     <ClInclude Include="src\graphicsManager.h" />
     <ClInclude Include="src\graphManager.h" />
     <ClInclude Include="src\LineShape.hpp" />
+    <ClInclude Include="src\parametricGraph.h" />
     <ClInclude Include="src\plotutil.h" />
     <ClInclude Include="src\stateManager.h" />
     <ClInclude Include="src\tinyexpr\tinyexpr.h" />

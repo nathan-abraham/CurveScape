@@ -2,9 +2,12 @@
 #include <fstream>
 #include <regex>
 #include <string.h>
+
 #include <SFML/Graphics.hpp>
+#include <nfd.h>
 #include "graph.h"
 #include "fileOperations.h"
+#include "stateManager.h"
 
 #define LOG(x) std::cout << (x) << std::endl;
 
@@ -45,4 +48,43 @@ void loadGraphs(std::vector<Graph*>& graphs, const char* filename) {
             graph->updatePoints();
         }
     }
+}
+
+void saveGraphsAs(StateManager& sm, std::vector<Graph*>& graphs) {
+    LOG("main loop save as")
+    nfdchar_t *rawFilename;
+    nfdresult_t result = NFD_SaveDialog("png;jpg;graph", NULL, &rawFilename);
+
+    if (result == NFD_OKAY)
+    {
+        sm.currentFileOpen = rawFilename;
+        if (sm.currentFileOpen.find(".graph") != std::string::npos)
+        {
+            saveGraphs(graphs, rawFilename);
+        }
+        else
+        {
+            sm.imageFilename = rawFilename;
+
+            if (sm.imageFilename.substr(sm.imageFilename.size() - 4).find(".") == std::string::npos)
+            {
+                LOG("added extension")
+                sm.imageFilename += ".png";
+            }
+            sm.mainActive = false;
+            sm.panelActive = false;
+            sm.calcActive = false;
+            sm.screenshotFlag = true;
+            sm.frameDelay = 0;
+        }
+    }
+    else if (result == NFD_CANCEL)
+    {
+        LOG("canceled saving")
+    }
+    else
+    {
+        LOG(NFD_GetError());
+    }
+    sm.saveAsFlag = false;
 }
