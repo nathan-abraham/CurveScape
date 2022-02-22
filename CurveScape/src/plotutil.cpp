@@ -165,7 +165,7 @@ void drawHorizontal(sf::RenderWindow& window, const float& endVal, const int& wi
                 majorLines.push_back(GridLine(line, major));
             }
 
-            if (i != 0 and major) {
+            if (i != 0 && major) {
                 float labelNum = roundDecimal((float)i / gap, countDigits(offset));
                 if (labelNum - floor(labelNum) < 0.001) {
                     text.setString(std::to_string((int)labelNum));
@@ -211,7 +211,7 @@ void drawHorizontal(sf::RenderWindow& window, const float& endVal, const int& wi
                 majorLines.push_back(GridLine(line, major));
             }
 
-            if (i != 0 and major) {
+            if (i != 0 && major) {
                 float labelNum = roundDecimal((float)i / gap, countDigits(offset));
                 if (labelNum - floor(labelNum) < 0.001) {
                     text.setString(std::to_string((int)labelNum));
@@ -315,7 +315,7 @@ void drawVertical(sf::RenderWindow& window, const float& endVal, const int& widt
                 majorLines.push_back(GridLine(line, major));
             }
 
-            if (i != 0 and major) {
+            if (i != 0 && major) {
                 float labelNum = roundDecimal((float)i / gap, countDigits(offset));
                 if (labelNum - floor(labelNum) < 0.001) {
                     text.setString(std::to_string((int)labelNum));
@@ -361,7 +361,7 @@ void drawVertical(sf::RenderWindow& window, const float& endVal, const int& widt
                 majorLines.push_back(GridLine(line, major));
             }
 
-            if (i != 0 and major) {
+            if (i != 0 && major) {
                 float labelNum = roundDecimal((float)i / gap, countDigits(offset));
                 if (labelNum - floor(labelNum) < 0.001) {
                     text.setString(std::to_string((int)labelNum));

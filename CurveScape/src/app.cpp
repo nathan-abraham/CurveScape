@@ -1,5 +1,6 @@
 #include <iostream>
 #include <array>
+#include <future>
 #include <SFML/Graphics.hpp>
 #include <imgui.h>
 #include <imgui-SFML.h>
@@ -18,6 +19,7 @@
 #include "calculus.h"
 #include "eval.h"
 #include "fileOperations.h"
+#include "imgui/imgui_loading.h"
 
 #define LOG(x) std::cout << (x) << std::endl;
 
@@ -39,11 +41,6 @@ void App::run() {
     GraphicsManager gm(window);
     StateManager sm;
     EventManager eventManager;
-
-    sf::Vector2f oldPos;
-    static bool moving = false;
-    static const float zoomIncrement = 0.075f;
-    static const float zoomOffset = 0.001f;
 
     std::string currentPath = this->argv[0];
     currentPath = currentPath.substr(0, currentPath.size() - std::string("CurveScape.exe").size());
@@ -110,121 +107,16 @@ void App::run() {
     while (window.isOpen())
     {
         sf::Event event;
-        if (window.waitEvent(event))
-        {
-            ImGui::SFML::ProcessEvent(event);
-
-            if (event.type == sf::Event::Closed)
-                window.close();
-
-            if (event.type == sf::Event::MouseButtonPressed && !sm.imGuiFocused)
+        if (window.hasFocus()) {
+            while (window.pollEvent(event))
             {
-                if (event.mouseButton.button == 0)
-                {
-                    moving = true;
-                    oldPos = window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y));
-                }
+                sm.handleEvents(window, gm, event, graphs, polarGraphs, IO);
             }
-
-            else if (event.type == sf::Event::MouseButtonReleased)
+        }
+        else {
+            if (window.waitEvent(event))
             {
-                if (event.mouseButton.button == 0)
-                {
-                    moving = false;
-                }
-            }
-
-            if (event.type == sf::Event::MouseMoved && !sm.imGuiFocused)
-            {
-                if (moving)
-                {
-                    const sf::Vector2f newPos = window.mapPixelToCoords(sf::Vector2i(event.mouseMove.x, event.mouseMove.y));
-                    const sf::Vector2f deltaPos = oldPos - newPos;
-                    gm.view.setCenter(gm.view.getCenter() + deltaPos);
-                    window.setView(gm.view);
-                    oldPos = window.mapPixelToCoords(sf::Vector2i(event.mouseMove.x, event.mouseMove.y));
-
-                    for (Graph *graph : graphs)
-                    {
-                        graph->updatePoints();
-                    }
-                }
-            }
-
-            else if (event.type == sf::Event::Resized)
-            {
-                sf::FloatRect visibleArea(0.f, 0.f, event.size.width, event.size.height);
-                gm.view.reset(visibleArea);
-                window.setView(sf::View(visibleArea));
-                Graph::numPoints = (int)event.size.width;
-                for (Graph *graph : graphs)
-                {
-                    graph->updatePoints();
-                }
-            }
-
-            if (event.type == sf::Event::MouseWheelScrolled && !IO.WantCaptureMouse)
-            {
-                if (event.mouseWheelScroll.delta > 0 && Graph::scaleFactor * (1 + zoomIncrement) <= SCALE_MAX + zoomOffset)
-                {
-                    zoomViewAt({event.mouseWheelScroll.x, event.mouseWheelScroll.y}, window, gm.view, Graph::scaleFactor, zoomIncrement);
-                    for (Graph *graph : graphs)
-                    {
-                        graph->updatePoints();
-                    }
-                    for (Graph* graph : polarGraphs) {
-                        graph->updatePoints();
-                    }
-                }
-                else if (event.mouseWheelScroll.delta < 0 && Graph::scaleFactor * (1 - zoomIncrement) >= SCALE_MIN - zoomOffset)
-                {
-                    zoomViewAt({event.mouseWheelScroll.x, event.mouseWheelScroll.y}, window, gm.view, Graph::scaleFactor, -zoomIncrement);
-                    for (Graph *graph : graphs)
-                    {
-                        graph->updatePoints();
-                    }
-                    for (Graph* graph : polarGraphs) {
-                        graph->updatePoints();
-                    }
-                }
-            }
-
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && !sm.imGuiFocused)
-            {
-                if (Graph::scaleFactor - zoomIncrement > SCALE_MIN - zoomOffset)
-                    Graph::scaleFactor -= zoomIncrement;
-                for (Graph *graph : graphs)
-                {
-                    graph->updatePoints();
-                }
-                for (Graph* graph : polarGraphs) {
-                    graph->updatePoints();
-                }
-            }
-            else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && !sm.imGuiFocused)
-            {
-                if (Graph::scaleFactor + zoomIncrement < SCALE_MAX + zoomOffset)
-                    Graph::scaleFactor += zoomIncrement;
-                for (Graph *graph : graphs)
-                {
-                    graph->updatePoints();
-                }
-                for (Graph* graph : polarGraphs) {
-                    graph->updatePoints();
-                }
-            }
-
-            if ((sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) ||
-                 sf::Keyboard::isKeyPressed(sf::Keyboard::RControl)) &&
-                sf::Keyboard::isKeyPressed(sf::Keyboard::O))
-            {
-                sm.openFlag = true;
-            }
-            else if ((sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) ||
-                      sf::Keyboard::isKeyPressed(sf::Keyboard::RControl)) &&
-                     sf::Keyboard::isKeyPressed(sf::Keyboard::S))
-            {
-                sm.saveFlag = true;
+                sm.handleEvents(window, gm, event, graphs, polarGraphs, IO);
             }
         }
 
@@ -390,15 +282,19 @@ void App::run() {
                     ImGui::InputFloat("Upper Bound", &sm.intUpperBound);
                     if (ImGui::Button("Submit##intSumbit"))
                     {
-                        //std::thread integral(fnInt, graphs[currentFuncIndex]->expression, lower_bound, upper_bound, 100000);
-                        //integral.detach();
-                        sm.integralResult = fnInt(clean(graphs[sm.currentFuncIndex]->expression).c_str(), sm.intLowerBound, sm.intUpperBound, 400000);
-                        sm.integralCalculated = true;
+                        sm.integralLoading = true;
+                        sm.integralCalculated = false;
+                        std::string cleanedExpr = clean(graphs[sm.currentFuncIndex]->expression);
+                        sm.future = std::async(std::launch::async, fnInt, cleanedExpr, &sm, 1500000.f);
                     }
                     if (sm.integralCalculated)
                     {
                         std::string output = std::string("Result: ") + std::to_string(sm.integralResult);
                         ImGui::Text(output.c_str());
+                    }
+                    else if (sm.integralLoading) {
+                        const ImU32 col = ImGui::GetColorU32(ImGuiCol_ButtonHovered);
+                        ImGui::Spinner("##spinner", 10, 3, col);
                     }
                 }
                 else if (strcmp(sm.calcPreview, "max") == 0)

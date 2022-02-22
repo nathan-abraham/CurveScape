@@ -1,4 +1,10 @@
 #pragma once
+#include <future>
+#include <SFML/Graphics.hpp>
+#include <imgui.h>
+
+#include "graphicsManager.h"
+#include "graph.h"
 
 class StateManager {
 public:
@@ -32,12 +38,23 @@ public:
     double integralResult;
     double derivativeResult;
     double maxResult;
+
     bool integralCalculated;
+    bool integralLoading;
     bool derivativeCalculated;
     bool maxCalculated;
 
     char options[3][10];
     int numOptions;
 
+    sf::Vector2f oldPos;
+    bool moving;
+    float zoomIncrement;
+    float zoomOffset;
+
+
+    std::future<void> future;
+
     StateManager();
+    void handleEvents(sf::RenderWindow& window, GraphicsManager& gm, sf::Event& event, std::vector<Graph*>& graphs, std::vector<Graph*>& polarGraphs, ImGuiIO& IO);
 };

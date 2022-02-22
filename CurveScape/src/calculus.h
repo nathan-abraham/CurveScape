@@ -2,7 +2,7 @@
 
 double nDeriv(const char*, float&);
 
-double fnInt(const char*, float, float, float);
+void fnInt(std::string, StateManager*, float);
 
 double func_max(const char*, float, float);
 

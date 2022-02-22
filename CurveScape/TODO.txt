@@ -1,3 +1,2 @@
-- Add nDeriv function
+- Add nDeriv function in tinyexpr
 - Parametric Graphing
-- Refactor main.cpp

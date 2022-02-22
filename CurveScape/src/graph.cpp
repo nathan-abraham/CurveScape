@@ -12,6 +12,7 @@
 
 #define M_PI 3.14159265358979323846
 #define LOG(x) std::cout << (x) << std::endl;
+#define IMGUI_TOOLTIP 0
 
 float Graph::scaleFactor = 2.0f;
 sf::RenderWindow* Graph::window = NULL;
@@ -67,12 +68,14 @@ void Graph::draw(sf::RenderWindow& window) {
         tempLine.init(points[i], points[i + 1]);
         window.draw(tempLine);
 
-        //if (tempLine.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window)))) {
-        //    sf::Vector2f temp(SFMLToCartesian(points[i], origin));
-        //    std::string toolTip = std::to_string(temp.x / Graph::scaleFactor / (winWidth / ROWS)) + std::string(", ") +
-        //        std::to_string(temp.y / Graph::scaleFactor / (winWidth / ROWS));
-        //    ImGui::SetTooltip(toolTip.c_str());
-        //}
+        if (IMGUI_TOOLTIP) {
+            if (tempLine.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window)))) {
+                sf::Vector2f temp(SFMLToCartesian(points[i], origin));
+                std::string toolTip = std::to_string(temp.x / Graph::scaleFactor / (winWidth / ROWS)) + std::string(", ") +
+                    std::to_string(temp.y / Graph::scaleFactor / (winWidth / ROWS));
+                ImGui::SetTooltip(toolTip.c_str());
+            }
+        }
     }
 }
 
